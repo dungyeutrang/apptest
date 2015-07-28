@@ -10,6 +10,7 @@
 <!-- Custom css -->
     <?= $this->Html->css('/Frontend/css/style.css') ?>    
 
+
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
 
 <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">

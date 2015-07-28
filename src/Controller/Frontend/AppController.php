@@ -40,4 +40,5 @@ class AppController extends Controller
         $this->layout="Frontend/index";
         $this->loadComponent('Flash');
     }
+
 }

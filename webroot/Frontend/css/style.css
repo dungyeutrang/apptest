@@ -1,3 +1,3 @@
-img{
+.portfolio-item img,.modal-body img{
     width: 250px;
 }

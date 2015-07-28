@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -12,6 +13,7 @@
  * @since     0.2.9
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\Controller\Frontend;
 
 use Cake\Core\Configure;
@@ -35,16 +37,14 @@ class PagesController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When the view file could not
      *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
      */
-    
-    public function  index(){
-        
-    var_dump(1);die();
+    public function resetPassword()
+    {
+    $this->render('\Frontend\Pages\resetpassword');
     }
-
 
     public function display()
     {
-        
+
         $path = func_get_args();
 
         $count = count($path);
@@ -70,4 +70,5 @@ class PagesController extends AppController
             throw new NotFoundException();
         }
     }
+
 }

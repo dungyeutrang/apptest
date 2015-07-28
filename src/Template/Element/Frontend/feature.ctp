@@ -23,8 +23,8 @@
                                 <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Rikkeisoft:
-                                <strong><a href="http://rikkeisoft.com">RikkeiSoft</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
@@ -60,8 +60,8 @@
                                 <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Rikkeisoft:
-                                <strong><a href="http://rikkeisoft.com">RikkeiSoft</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
@@ -89,16 +89,16 @@
                             <?= $this->Html->image('/Frontend/img/portfolio/multiaccount.png',array('class'=>'img-responsive img-centered')); ?>
                         <p>You can have more than one account on Money Lover with unique financial data associated with it.</p>
                         <ul class="list-inline item-details">
-                            <li>Client:
-                                <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                               <li> Start Money Lover:
+                                <strong><?= $this->HTML->link('Start Money Lover','/') ?>
                                 </strong>
                             </li>
                             <li>Date:
-                                <strong><a href="http://startbootstrap.com">April 2014</a>
+                                <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Service:
-                                <strong><a href="http://startbootstrap.com">Web Development</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
@@ -134,8 +134,8 @@
                                 <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Rikkeisoft:
-                                <strong><a href="http://rikkeisoft.com">RikkeiSoft</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
@@ -171,8 +171,8 @@
                                 <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Rikkeisoft:
-                                <strong><a href="http://rikkeisoft.com">RikkeiSoft</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
@@ -208,8 +208,8 @@
                                 <strong><?= $this->HTML->link('July 2015','/') ?>
                                 </strong>
                             </li>
-                            <li>Rikkeisoft:
-                                <strong><a href="http://rikkeisoft.com">RikkeiSoft</a>
+                            <li>Money Lover:
+                                <strong><a href="https://play.google.com/store/apps/details?id=com.bookmark.money&hl=en">Money Lover</a>
                                 </strong>
                             </li>
                         </ul>
