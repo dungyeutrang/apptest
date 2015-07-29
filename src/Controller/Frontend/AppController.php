@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -12,6 +13,7 @@
  * @since     0.2.9
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\Controller\Frontend;
 
 use Cake\Controller\Controller;
@@ -37,8 +39,30 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-        $this->layout="Frontend/index";
+        $this->loadComponent('Csrf');
+        $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'loginAction' => [
+                'controller' => 'Frontend/TblUser',
+                'action' => 'login',
+            ],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ],
+                    'userModel' => 'TblUser'
+                ]
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Frontend/Pages',
+                'action' => 'display',
+                'home'
+            ]
+        ]);
+        $this->set('user',$this->Auth->user());
     }
 
 }

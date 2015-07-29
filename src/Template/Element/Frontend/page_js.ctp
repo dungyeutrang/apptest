@@ -1,6 +1,9 @@
     <!-- jQuery -->
     <?= $this->Html->script('/Frontend/js/jquery.js') ?>    
 
+    <!--Login -->
+    <?= $this->Html->script('/Frontend/js/login.js') ?>    
+
     <!-- Bootstrap Core JavaScript -->
     <?= $this->Html->script('/Frontend/js/bootstrap.min.js') ?>    
 
@@ -11,7 +14,7 @@
 
     <!-- Contact Form JavaScript -->
     <?= $this->Html->script('/Frontend/js/jqBootstrapValidation.js') ?>    
-    <?= $this->Html->script('/Frontend/js/contact_me.js') ?>    
+
 
     <!-- Custom Theme JavaScript -->
     <?= $this->Html->script('/Frontend/js/freelancer.js') ?>    

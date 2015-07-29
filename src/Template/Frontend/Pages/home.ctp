@@ -169,11 +169,30 @@
         </div>
     </section>
 
-    <?php
-    $this->start('feature')?>
-    <?= $this->element('Frontend/feature'); ?>
-    <?php $this->end();
-     ?>
-    <!-- feature Modals -->
-    <?= $this->fetch('feature') ?>   
+<div class="modal fade" id="modal_notice">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Notice</h4>
+      </div>
+      <div class="modal-body">
+       <?php  $message = $this->Flash->render('register'); if($message){?>
+        <p check=1 id="modal-message"><?= $message ?></p>
+       <?php }else{ ?>
+        <p check=-1 id="modal-message">You must check your mail to verify account !</p>
+        <?php }?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+
+ 
+    <!-- feature Modals -->
+    <?= $this->fetch('feature',$this->element('Frontend/feature')) ?>
+    <?= $this->HTML->script('/Frontend/js/home',['block'=>'scriptBottom']) ?> 
+    <?= $this->Html->script('/Frontend/js/contact_me',['block'=>'scriptBottom']) ?>    

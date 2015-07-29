@@ -15,6 +15,7 @@ namespace App\View;
 
 use Cake\View\View;
 
+
 /**
  * App View class
  */
@@ -31,5 +32,6 @@ class AppView extends View
      */
     public function initialize()
     {
+//        $this->helpers=array('Auth');
     }
 }

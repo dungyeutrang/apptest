@@ -50,6 +50,13 @@ Router::scope('/', function ($routes) {
         
     $routes->connect('/', ['controller' => 'Frontend/Pages', 'action' => 'display', 'home']);
     $routes->connect('/pages/:action', ['controller' => 'Frontend/Pages']);
+    $routes->connect('/user/:action', ['controller' => 'Frontend/TblUser']);
+    $routes->connect('/register', ['controller' => 'Frontend/TblUser','action'=>'add']);
+    $routes->connect('/login', ['controller' => 'Frontend/TblUser','action'=>'login']);
+    $routes->connect('/loginHome', ['controller' => 'Frontend/TblUser','action'=>'loginHome']);
+    $routes->connect('/logout', ['controller' => 'Frontend/TblUser','action'=>'logout']);
+    $routes->connect('/forgetpassword', ['controller' => 'Frontend/TblUser','action'=>'forgetPassword']);
+    $routes->connect('/resetpassword/:token', ['controller' => 'Frontend/TblUser','action'=>'resetPassword']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.

@@ -30,6 +30,11 @@ use Cake\View\Exception\MissingTemplateException;
 class PagesController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['display']);
+    }
     /**
      * Displays a view
      *
@@ -39,12 +44,11 @@ class PagesController extends AppController
      */
     public function resetPassword()
     {
-    $this->render('\Frontend\Pages\resetpassword');
+        $this->render('\Frontend\Pages\resetpassword');
     }
 
     public function display()
-    {
-
+    {      
         $path = func_get_args();
 
         $count = count($path);
