@@ -25,7 +25,7 @@ class TblUserTable extends Table
      */
     public function initialize(array $config)
     {
-        parent::initialize($config);        
+        parent::initialize($config);
         $this->table('tbl_user');
         $this->displayField('id');
         $this->primaryKey('id');
@@ -85,6 +85,27 @@ class TblUserTable extends Table
     }
 
     /**
+     * validate when reset password
+     * @param Validator $validator
+     */
+    public function validatorResetPassword()
+    {
+        $validator = new Validator();
+        $validator->add('password', ['minLength' => [
+                'rule' => ['minLength', 6],
+                'last' => true,
+                'message' => 'Password must be more or than equal 6 character'
+            ],
+        ])->requirePresence('password');
+
+        $validator->add('password_confirm', 'compareWith', [
+            'rule' => ['compareWith', 'password'],
+            'message' => 'Passwords not equal.'
+        ]);
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -100,8 +121,8 @@ class TblUserTable extends Table
 
     public static function getAccount($email)
     {
-        $user =  TableRegistry::get('tbl_user');
-        return $user->find()->where(['email'=>$email])->first();
+        $user = TableRegistry::get('tbl_user');
+        return $user->find()->where(['email' => $email])->first();
     }
 
 }

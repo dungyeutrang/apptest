@@ -8,18 +8,12 @@ footer{
 .navbar{
     position: relative;
 }
-#form-register{    
-    margin-bottom: 30px;
+#content{
+    height: 320px;
 }
-input[type="submit"]{
-    margin-top: 10px;
-}
-#form-register{
-    padding: 0 15px 0 15px;
-}
-.error-message{
-    color:#d62c1a;
-    margin: 5px;
+.icon-mail{
+    width: 188px;
+    height: 153px;
 }
 #message{
     font-size: 32px;
@@ -29,8 +23,13 @@ input[type="submit"]{
     text-transform: inherit;
     margin-top: 10px;
 }
-#btn-login{
-    padding: 15px 40px 15px 40px;
+#back-login{
+    padding: 15px 60px 15px 60px;
     margin-top: 35px;
     background: #e73e5d;
+}
+#notice{
+    font-family: "BrandonText-Regular", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 17px;
 }

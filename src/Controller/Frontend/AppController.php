@@ -39,7 +39,9 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('Csrf');
+        $this->loadComponent('Csrf',[
+            'expiry'=>'1 day'
+        ]);
         $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [

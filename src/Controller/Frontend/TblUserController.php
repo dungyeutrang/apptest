@@ -5,6 +5,7 @@ namespace App\Controller\Frontend;
 use Cake\Core\Configure;
 use Cake\Network\Email\Email;
 use Cake\Routing\Router;
+use Cake\Validation\Validator;
 
 /**
  * TblUser Controller
@@ -18,7 +19,7 @@ class TblUserController extends AppController
     {
         parent::initialize();
         $this->loadModel('TblUser');
-        $this->Auth->allow(['login', 'add', 'loginHome', 'resetPassword', 'forgetPassword']);
+        $this->Auth->allow(['login', 'add', 'loginHome', 'resetPassword', 'forgetPassword', 'view']);
     }
 
     /**
@@ -81,14 +82,17 @@ class TblUserController extends AppController
             $emailuser = $this->request->data('email');
             $user = $this->TblUser->getAccount($emailuser);
             if ($user) {
-                $email = new Email('default');                
+                $email = new Email('default');
+                $key = Configure::read('key.encrypt');
+                $token = sha1($user['id'] . $key);
                 $link = Router::url('/', true) . 'resetpassword/' . $token;
-//                var_dump($link);die;
                 $email->to($emailuser)
                         ->subject("Money Lover !.Reset password")
                         ->emailFormat("html")
                         ->send("<a href='" . $link . "'>Click here to reset your password<a>");
-                return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
+                $this->set('email', $emailuser);
+                $this->render('after_forget_password');
+//                return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
             } else {
                 $this->Flash->error(__(Configure::read('message.account_not_exist')));
             }
@@ -97,8 +101,25 @@ class TblUserController extends AppController
 
     public function resetPassword()
     {
-       
-        die();
+        $token = $this->request->token;
+        $key = Configure::read('key.encrypt');
+        $data = $this->TblUser->find()->where(["sha1(id$key)" => $token])->first();
+        if (!$data) {
+            $this->redirect('/');
+        }
+        if ($this->request->is("post")) {
+            $validator = $this->TblUser->validatorResetPassword();
+            $errors=$validator->errors($this->request->data);
+            if (empty($errors)) {
+                var_dump(1);
+                
+            }else{
+
+                var_dump(2);
+            }
+            die();
+            
+        }
     }
 
     /**
@@ -108,13 +129,9 @@ class TblUserController extends AppController
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view()
     {
-        $tblUser = $this->TblUser->get($id, [
-            'contain' => ['LastWallets']
-        ]);
-        $this->set('tblUser', $tblUser);
-        $this->set('_serialize', ['tblUser']);
+        $this->render('after_forget_password');
     }
 
     /**
