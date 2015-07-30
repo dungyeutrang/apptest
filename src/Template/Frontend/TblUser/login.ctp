@@ -1,6 +1,4 @@
-<?=
-
-$this->HTML->css('/Frontend/css/login.css')?>
+<?=$this->HTML->css('/Frontend/css/login.css')?>
 <div class="container">
     <div class="row text-center">
      <?= $this->HTML->image('/Frontend/img/icon-shades.svg',array('class'=>'img-responsive center-block')); ?>

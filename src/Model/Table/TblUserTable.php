@@ -4,7 +4,6 @@ namespace App\Model\Table;
 
 use App\Model\Entity\TblUser;
 use Cake\ORM\Query;
-use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -119,10 +118,20 @@ class TblUserTable extends Table
         return $rules;
     }
 
-    public static function getAccount($email)
+    /**
+     * get account by email
+     * @param type $user
+     * @param type $email
+     * @return type
+     */
+    public function getAccount($user, $email)
     {
-        $user = TableRegistry::get('tbl_user');
         return $user->find()->where(['email' => $email])->first();
+    }
+
+    public function updateEntity($user,$entity)
+    {
+        $user->save($entity);
     }
 
 }

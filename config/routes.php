@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routes configuration
  *
@@ -17,7 +18,6 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
 use Cake\Core\Plugin;
 use Cake\Routing\Router;
 
@@ -47,16 +47,25 @@ Router::scope('/', function ($routes) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-        
-    $routes->connect('/', ['controller' => 'Frontend/Pages', 'action' => 'display', 'home']);
-    $routes->connect('/pages/:action', ['controller' => 'Frontend/Pages']);
-    $routes->connect('/user/:action', ['controller' => 'Frontend/TblUser']);
-    $routes->connect('/register', ['controller' => 'Frontend/TblUser','action'=>'add']);
-    $routes->connect('/login', ['controller' => 'Frontend/TblUser','action'=>'login']);
-    $routes->connect('/loginHome', ['controller' => 'Frontend/TblUser','action'=>'loginHome']);
-    $routes->connect('/logout', ['controller' => 'Frontend/TblUser','action'=>'logout']);
-    $routes->connect('/forgetpassword', ['controller' => 'Frontend/TblUser','action'=>'forgetPassword']);
-    $routes->connect('/resetpassword/:token', ['controller' => 'Frontend/TblUser','action'=>'resetPassword']);
+    $routes->connect('/', ['prefix' => 'Frontend', 'controller' => 'Pages', 'action' => 'display', 'home']);
+    $routes->connect('/pages/:action', ['prefix' => 'Frontend', 'controller' => 'Pages']);
+    $routes->connect('/user/:action', ['prefix' => 'Frontend', 'controller' => 'TblUser']);
+    $routes->connect('/register', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'add']);
+    $routes->connect('/login', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'login'], ['_name' => 'login']);
+    $routes->connect('/loginHome', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'loginHome']);
+    $routes->connect('/logout', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'logout'], ['_name' => 'logout']);
+    $routes->connect('/forgetpassword', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'forgetPassword']);
+    $routes->connect('/resetpassword/:token', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'resetPassword']);
+    $routes->connect('/active/:token', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'activeUser']);
+
+    $routes->prefix('manage', function($routes) {
+        $routes->connect('/index', ['controller' => 'Home', 'action' => 'index'], ['_name' => 'home']);
+        $routes->connect('/wallet/index', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet']);
+        $routes->connect('/wallet/add-wallet', ['controller' => 'Wallet', 'action' => 'add'], ['_name' => 'wallet_add']);
+        $routes->connect('/wallet/edit-wallet/:id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
+        $routes->connect('/wallet/delete-wallet/:id', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet_delete', 'id' => '\d+']);
+        $routes->fallbacks('InflectedRoute');
+    });
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
@@ -81,6 +90,7 @@ Router::scope('/', function ($routes) {
      */
     $routes->fallbacks('InflectedRoute');
 });
+
 
 /**
  * Load all plugin routes.  See the Plugin documentation on

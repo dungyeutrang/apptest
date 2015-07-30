@@ -1,11 +1,11 @@
 <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-    <?= $this->Html->css('/Frontend/css/bootstrap.min.css') ?>    
+    <?= $this->Html->css('/Common/css/bootstrap.min.css') ?>    
 
 <!-- Custom CSS -->
     <?= $this->Html->css('/Frontend/css/freelancer.css') ?>    
 
 <!-- Custom Fonts -->
-    <?= $this->Html->css('/Frontend/css/font-awesome.min.css') ?>    
+    <?= $this->Html->css('/Common/css/font-awesome.min.css') ?>    
 
 <!-- Custom css -->
     <?= $this->Html->css('/Frontend/css/style.css') ?>    

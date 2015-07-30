@@ -1,5 +1,5 @@
 <?=$this->HTML->css('/Frontend/css/register.css')?>
-<?=$this->HTML->css('/Frontend/css/jquery-ui.css')?>
+<?=$this->HTML->css('/Common/css/jquery-ui.css')?>
 <div class="container">
    <div class="row text-center">
      <?= $this->HTML->image('/Frontend/img/icon-boombox.svg',array('class'=>'img-responsive center-block')); ?>
@@ -27,5 +27,4 @@
 </div>
 </div>
 <?= $this->HTML->script('/Frontend/js/register',['block'=>'scriptBottom']) ?>
-<?= $this->HTML->script('/Frontend/js/jquery-ui.min',['block'=>'scriptBottom']) ?>
-
+<?= $this->HTML->script('/Common/js/jquery-ui.min',['block'=>'scriptBottom']) ?>

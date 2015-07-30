@@ -3,9 +3,7 @@
 namespace App\Controller\Frontend;
 
 use Cake\Core\Configure;
-use Cake\Network\Email\Email;
-use Cake\Routing\Router;
-use Cake\Validation\Validator;
+use lib\SendMail;
 
 /**
  * TblUser Controller
@@ -15,11 +13,14 @@ use Cake\Validation\Validator;
 class TblUserController extends AppController
 {
 
+    public $sendmail;
+
     public function initialize()
     {
         parent::initialize();
+        $this->sendmail = new SendMail();
         $this->loadModel('TblUser');
-        $this->Auth->allow(['login', 'add', 'loginHome', 'resetPassword', 'forgetPassword', 'view']);
+        $this->Auth->allow(['login', 'add', 'loginHome', 'resetPassword', 'forgetPassword', 'activeUser']);
     }
 
     /**
@@ -64,6 +65,19 @@ class TblUserController extends AppController
         }
     }
 
+    public function activeUser()
+    {
+        $token = $this->request->token;
+        $key = Configure::read('key.encrypt');
+        $data = $this->TblUser->find()->where(["sha1(id$key)" => $token])->first();
+        if (!$data) {
+            $this->redirect('/');
+        }
+        $data->is_active = 1;
+        $this->TblUser->updateEntity($this->TblUser, $data);
+        $this->redirect('/login');
+    }
+
     /**
      * logout user
      */
@@ -80,25 +94,20 @@ class TblUserController extends AppController
 
         if ($this->request->is("post")) {
             $emailuser = $this->request->data('email');
-            $user = $this->TblUser->getAccount($emailuser);
+            $user = $this->TblUser->getAccount($this->TblUser, $emailuser);
             if ($user) {
-                $email = new Email('default');
-                $key = Configure::read('key.encrypt');
-                $token = sha1($user['id'] . $key);
-                $link = Router::url('/', true) . 'resetpassword/' . $token;
-                $email->to($emailuser)
-                        ->subject("Money Lover !.Reset password")
-                        ->emailFormat("html")
-                        ->send("<a href='" . $link . "'>Click here to reset your password<a>");
+                $this->sendmail->send($user['id'], $emailuser, 'resetpassword', Configure::read('mail.header_reset'), Configure::read('mail.body_reset'));
                 $this->set('email', $emailuser);
                 $this->render('after_forget_password');
-//                return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
             } else {
                 $this->Flash->error(__(Configure::read('message.account_not_exist')));
             }
         }
     }
 
+    /**
+     * reset password
+     */
     public function resetPassword()
     {
         $token = $this->request->token;
@@ -107,35 +116,21 @@ class TblUserController extends AppController
         if (!$data) {
             $this->redirect('/');
         }
+        $errors = array();
         if ($this->request->is("post")) {
             $validator = $this->TblUser->validatorResetPassword();
-            $errors=$validator->errors($this->request->data);
+            $errors = $validator->errors($this->request->data);
             if (empty($errors)) {
-                var_dump(1);
-                
-            }else{
-
-                var_dump(2);
+                $data->password = $this->request->data('password');
+                $this->TblUser->updateEntity($this->TblUser, $data);
+                $this->redirect('/login');
             }
-            die();
-            
         }
+        $this->set('errors', $errors);
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Tbl User id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view()
-    {
-        $this->render('after_forget_password');
-    }
-
-    /**
-     * Add method
+     * Register Usẻ
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
@@ -145,6 +140,7 @@ class TblUserController extends AppController
         if ($this->request->is('post')) {
             $tblUser = $this->TblUser->patchEntity($tblUser, $this->request->data);
             if ($this->TblUser->save($tblUser)) {
+                $this->sendmail->send($tblUser->id, $tblUser->email, 'active', Configure::read('mail.header_active'), Configure::read('mail.body_active'));
                 $this->Flash->success(__(Configure::read('message.register_success')), ['key' => 'register']);
                 return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
             } else {
@@ -178,25 +174,6 @@ class TblUserController extends AppController
         $lastWallets = $this->TblUser->LastWallets->find('list', ['limit' => 200]);
         $this->set(compact('tblUser', 'lastWallets'));
         $this->set('_serialize', ['tblUser']);
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Tbl User id.
-     * @return void Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $tblUser = $this->TblUser->get($id);
-        if ($this->TblUser->delete($tblUser)) {
-            $this->Flash->success(__('The tbl user has been deleted.'));
-        } else {
-            $this->Flash->error(__('The tbl user could not be deleted. Please, try again.'));
-        }
-        return $this->redirect(['action' => 'index']);
     }
 
 }

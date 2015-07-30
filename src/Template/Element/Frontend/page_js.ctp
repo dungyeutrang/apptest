@@ -1,11 +1,11 @@
     <!-- jQuery -->
-    <?= $this->Html->script('/Frontend/js/jquery.js') ?>    
+    <?= $this->Html->script('/Common/js/jquery.js') ?>    
 
     <!--Login -->
     <?= $this->Html->script('/Frontend/js/login.js') ?>    
 
     <!-- Bootstrap Core JavaScript -->
-    <?= $this->Html->script('/Frontend/js/bootstrap.min.js') ?>    
+    <?= $this->Html->script('/Common/js/bootstrap.min.js') ?>    
 
     <!-- Plugin JavaScript -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -14,7 +14,6 @@
 
     <!-- Contact Form JavaScript -->
     <?= $this->Html->script('/Frontend/js/jqBootstrapValidation.js') ?>    
-
 
     <!-- Custom Theme JavaScript -->
     <?= $this->Html->script('/Frontend/js/freelancer.js') ?>    

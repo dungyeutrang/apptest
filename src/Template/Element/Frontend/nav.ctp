@@ -14,6 +14,20 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-left">
+                  <?php if($this->request->url){?>
+                    <li class="hidden">
+                        <a href="<?= $this->Url->build('/') ?>#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="<?= $this->Url->build('/') ?>#portfolio">Home</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="<?= $this->Url->build('/')?>#about">About</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="<?= $this->Url->build('/')?>#contact">Contact</a>
+                    </li>
+                   <?php }else{ ?>
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
@@ -25,7 +39,8 @@
                     </li>
                     <li class="page-scroll">
                         <a href="#contact">Contact</a>
-                    </li>                  
+                    </li>
+                   <?php }?>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if(!$user){ ?>
@@ -33,8 +48,8 @@
              <?php }else{ ?>
                 <li class="dropdown"><a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Hi!&nbsp;<?php echo $user['last_name'].$user['first_name'] ?> <span class="caret"></a>
                    <ul class="dropdown-menu">
-                   <li><a href="#">Manage</a></li>                   
-                   <li><a href="<?php echo $this->Url->build('/logout',true) ?>">Logout</a></li>                   
+                   <li><a href="#">Manage</a></li>
+                   <li><a href="<?php echo $this->Url->build('/logout',true) ?>">Logout</a></li>
                  </ul>
                 </li>
             <?php } ?>

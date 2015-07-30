@@ -8,14 +8,24 @@
         <div class="row">
     <?php echo $this->Flash->render(); ?>
         </div>
+<div></div>
+<div class="row text-center" id="error-message">
+        <?php  foreach($errors as $error):
+        foreach($error as $data):
+         ?>
+        <li class="list-unstyled"><?php echo $data ?></li>
+        <?php endforeach;
+              endforeach;
+        ?>
+</div>     
     <?= $this->Form->create(null,
          array('class'=>'form form-horizontal col-sm-offset-4 col-sm-4 col-md-offset-4 col-md-4 col-lg-offset-4 col-lg-4',
         )); ?>
         <?php
-            echo $this->Form->input('password',array('label' => 'New Password','type'=>'password','class'=>'form-control','placeholder'=>'hello@gmail.com'));
+            echo $this->Form->input('password',array('label' => 'New Password','type'=>'password','class'=>'form-control'));
         ?>
         <?php
-            echo $this->Form->input('password_confirm',array('label'=>'Confirm Password','type'=>'password','class'=>'form-control','placeholder'=>'hello@gmail.com'));
+            echo $this->Form->input('password_confirm',array('label'=>'Confirm Password','type'=>'password','class'=>'form-control'));
         ?>
         
     <?= $this->Form->submit('Reset',['type'=>'submit','class'=>'btn btn-success center-block','id'=>'btn-login'])?>

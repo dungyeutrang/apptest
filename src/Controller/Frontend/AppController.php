@@ -39,14 +39,12 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('Csrf',[
-            'expiry'=>'1 day'
-        ]);
         $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [
             'loginAction' => [
-                'controller' => 'Frontend/TblUser',
+                'prefix'=>'Frontend',
+                'controller' => 'TblUser',
                 'action' => 'login',
             ],
             'authenticate' => [
@@ -59,7 +57,8 @@ class AppController extends Controller
                 ]
             ],
             'logoutRedirect' => [
-                'controller' => 'Frontend/Pages',
+                'prefix'=>'Frontend',
+                'controller' => 'Pages',
                 'action' => 'display',
                 'home'
             ]
