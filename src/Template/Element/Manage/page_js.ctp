@@ -38,7 +38,4 @@
   <!-- Toastr -->
     <?= $this->Html->script('/Manage/js/plugins/toastr/toastr.min.js') ?>    
 
-<!-- custom index -->
-    <?= $this->Html->script('/Manage/js/index.js') ?>    
-
     <?= $this->fetch('script') ?>

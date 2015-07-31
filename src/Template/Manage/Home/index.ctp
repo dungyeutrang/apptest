@@ -419,3 +419,6 @@
         </div>
     </div>
 </div>
+
+<!-- custom index -->
+    <?= $this->Html->script('/Manage/js/index.js',['block'=>'scriptBottom']) ?>    

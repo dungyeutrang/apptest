@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use App\Model\Entity\Wallet;
@@ -32,6 +33,9 @@ class WalletTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+        $this->hasMany('Category',[
+            'className'=>'Wallet'
+        ]);
     }
 
     /**
@@ -43,43 +47,13 @@ class WalletTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+                ->requirePresence('name', 'create')
+                ->notEmpty('name');
 
         $validator
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
-
-        $validator
-            ->add('amount', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('amount', 'create')
-            ->notEmpty('amount');
-
-        $validator
-            ->add('is_default', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('is_default', 'create')
-            ->notEmpty('is_default');
-
-        $validator
-            ->add('date_created', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('date_created', 'create')
-            ->notEmpty('date_created');
-
-        $validator
-            ->add('date_updated', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('date_updated', 'create')
-            ->notEmpty('date_updated');
-
-        $validator
-            ->add('date_deleted', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('date_deleted', 'create')
-            ->notEmpty('date_deleted');
-
-        $validator
-            ->add('status', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('status', 'create')
-            ->notEmpty('status');
-
+                ->add('amount', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('amount', 'create')
+                ->notEmpty('amount');
         return $validator;
     }
 
@@ -95,4 +69,20 @@ class WalletTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'TblUser'));
         return $rules;
     }
+
+    /**
+     * check exist wallet with user id 
+     * @param type $wallet
+     * @param type $userId
+     * @return boolean
+     */
+    public function checkWalletDefault($wallet, $userId)
+    {
+        $data = $wallet->find()->where(['user_id' => $userId])->toArray();
+        if (count($data) == 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

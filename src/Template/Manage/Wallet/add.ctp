@@ -1,26 +1,17 @@
-<div class="actions columns large-2 medium-3">
-    <h3><?= __('Actions') ?></h3>
-    <ul class="side-nav">
-        <li><?= $this->Html->link(__('List Wallet'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Tbl User'), ['controller' => 'TblUser', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Tbl User'), ['controller' => 'TblUser', 'action' => 'add']) ?></li>
-    </ul>
+<?= $this->HTML->css('/Manage/css/wallet/add',['block'=>'css_header']) ?>
+<div class="container">
+<div class="row center-block text-center">
+    <?= $this->HTML->image('/Manage/img/wallet.png',array('class'=>'img-cirlce center-block'))  ?>
+    <p id="title_add">Add Your Wallet !</p>
 </div>
-<div class="wallet form large-10 medium-9 columns">
-    <?= $this->Form->create($wallet) ?>
-    <fieldset>
-        <legend><?= __('Add Wallet') ?></legend>
+<div class="row">
+    <?= $this->Form->create($wallet,array('class'=>'form-horizontal col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 col-lg-offset-3 col-lg-6')) ?>
         <?php
-            echo $this->Form->input('user_id', ['options' => $tblUser]);
-            echo $this->Form->input('name');
-            echo $this->Form->input('amount');
-            echo $this->Form->input('is_default');
-            echo $this->Form->input('date_created');
-            echo $this->Form->input('date_updated');
-            echo $this->Form->input('date_deleted');
-            echo $this->Form->input('status');
+            echo $this->Form->input('name',array('class'=>'form-control','placeholder'=>'salary..'));
+            echo $this->Form->input('amount',array('class'=>'form-control','placeholder'=>'500.000','id'=>'amount'));
         ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->button(__('Submit'),array('class'=>'btn btn-info')) ?>
     <?= $this->Form->end() ?>
 </div>
+</div>
+<?= $this->HTML->script('/Manage/js/wallet/add',array('block'=>'scriptBottom')) ?>

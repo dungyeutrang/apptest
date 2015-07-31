@@ -39,14 +39,11 @@ class CategoryTable extends Table
             'foreignKey' => 'catalog_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('ParentCategory', [
-            'className' => 'Category',
-            'foreignKey' => 'parent_id'
-        ]);
-        $this->hasMany('ChildCategory', [
-            'className' => 'Category',
-            'foreignKey' => 'parent_id'
-        ]);
+//        $this->belongsTo('ParentCategory', [
+//            'className' => 'Category',
+//            'foreignKey' => 'parent_id'
+//        ]);
+
     }
 
     /**
@@ -61,19 +58,19 @@ class CategoryTable extends Table
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+//        $validator
+//            ->requirePresence('name', 'create')
+//            ->notEmpty('name');
 
-        $validator
-            ->add('is_default', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('is_default', 'create')
-            ->notEmpty('is_default');
+//        $validator
+//            ->add('is_default', 'valid', ['rule' => 'numeric'])
+//            ->requirePresence('is_default', 'create')
+//            ->notEmpty('is_default');
 
-        $validator
-            ->add('status', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('status', 'create')
-            ->notEmpty('status');
+//        $validator
+//            ->add('status', 'valid', ['rule' => 'numeric'])
+//            ->requirePresence('status', 'create')
+//            ->notEmpty('status');
 
         return $validator;
     }
@@ -89,7 +86,7 @@ class CategoryTable extends Table
     {
         $rules->add($rules->existsIn(['wallet_id'], 'TblWallet'));
         $rules->add($rules->existsIn(['catalog_id'], 'MstCatalog'));
-        $rules->add($rules->existsIn(['parent_id'], 'ParentCategory'));
+//        $rules->add($rules->existsIn(['parent_id'], 'ParentCategory'));
         return $rules;
     }
 }

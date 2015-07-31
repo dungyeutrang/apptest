@@ -41,6 +41,7 @@ class AppController extends Controller
         parent::initialize();
         $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
+        $this->loadComponent("csrf");
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix'=>'Frontend',

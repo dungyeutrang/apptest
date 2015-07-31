@@ -1,8 +1,4 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+$config['message']['add_wallet_success'] = 'Add wallet success !';
+$config['message']['add_wallet_fail'] = 'Add wallet fail !';

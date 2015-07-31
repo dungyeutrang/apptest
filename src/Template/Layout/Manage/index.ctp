@@ -6,6 +6,7 @@
         <title>Manage your expense</title>
         <?= $this->fetch('meta') ?>
         <?= $this->fetch('css',$this->element('Manage/header')) ?>
+        <?= $this->fetch('css_header') ?>
     </head>
     <body>
         <div id="wrapper">      

@@ -13,11 +13,13 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
+        date_default_timezone_set("Asia/Bangkok");
         $this->layout = "Manage/index";
+        $this->loadComponent("csrf");
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [
             'loginAction' => [
-              '_name'=>'login'
+                '_name' => 'login'
             ],
             'authenticate' => [
                 'Form' => [
