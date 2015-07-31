@@ -19,12 +19,28 @@ class WalletController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['TblUser']
-        ];
-        $this->loadModel('Category');
-        $this->set('wallet', $this->paginate($this->Wallet));
-        $this->set('_serialize', ['wallet']);
+//        $this->paginate = [
+//            'contain' => ['TblUser']
+//        ];
+//        $this->loadModel('Category');
+//        $this->set('wallet', $this->paginate($this->Wallet));
+//        $this->set('_serialize', ['wallet']);
+        
+      
+         $data=[
+             'name'=>'kdqpdqkdpq',
+             'user_id'=>$this->Auth->user('id'),
+             'amount'=>1200,
+             'category'=>[
+                 [
+                     'name'=>'nwofnww',
+                     'catalog_id'=>1
+                 ]
+             ]
+         ];
+         $wallet = $this->Wallet->newEntity($data);
+         $this->Wallet->save($wallet, ['associated'=>['category']]);
+        die();
     }
 
     /**
@@ -65,7 +81,7 @@ class WalletController extends AppController
             $wallet->category = [['catalog_id' => 1, 'name' => 'chi tieu']];
             $wallet->dirty('category', true);
 //            var_dump($wallet);die;
-            var_dump($this->Wallet->save($wallet, ['associated' => ['category']]));die;
+//            var_dump($this->Wallet->save($wallet, ['associated' => ['category']]));die;
             
             if ($this->Wallet->save($wallet, ['associated' => ['category']])) {
                 $this->Flash->success(__(Configure::read('message.add_wallet_success')));

@@ -34,7 +34,7 @@ class WalletTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->hasMany('Category',[
-            'className'=>'Wallet'
+            'foreignKey'=>'wallet_id'
         ]);
     }
 

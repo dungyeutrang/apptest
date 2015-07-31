@@ -27,7 +27,7 @@ class TblUserTable extends Table
         parent::initialize($config);
         $this->table('tbl_user');
         $this->displayField('id');
-        $this->primaryKey('id');
+        $this->primaryKey('id');        
     }
 
     /**
