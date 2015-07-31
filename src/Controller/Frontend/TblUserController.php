@@ -51,12 +51,12 @@ class TblUserController extends AppController
      * @return type
      */
     public function login()
-    {
+    {        
         if ($this->request->is("post")) {
             $user = $this->Auth->identify();
             if ($user && $user['is_active'] == 1) {
                 $this->Auth->setUser($user);
-                return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
+                return $this->redirect(['prefix'=>'manage','controller' => 'Home', 'action' => 'index']);
             } else if ($user && $user['is_active'] != 1) {
                 $this->Flash->error(__(Configure::read('message.error_active')));
             } else {

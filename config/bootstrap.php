@@ -53,6 +53,7 @@ use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use Cake\Routing\Filter\AssetFilter;
 
 
 Configure::load('setting_message_frontend');
@@ -197,6 +198,8 @@ if (Configure::read('debug')) {
 DispatcherFactory::add('Asset');
 DispatcherFactory::add('Routing');
 DispatcherFactory::add('ControllerFactory');
+//DispatcherFactory::add('Test', ['for' => '/manage']);
+//DispatcherFactory::add(new AssetFilter(['priority' => 1,'cacheTime' => '+24 hours']));
 
 /**
  * Enable default locale format parsing.

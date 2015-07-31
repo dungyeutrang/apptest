@@ -11,14 +11,30 @@ class AppController extends Controller
 {
 
     public function initialize()
-    {    
+    {
         parent::initialize();
         $this->layout = "Manage/index";
         $this->loadComponent('Flash');
-        $this->loadComponent('Auth');
-        if(!$this->Auth->user()){
-            $this->redirect('/login');
-        }
+        $this->loadComponent('Auth', [
+            'loginAction' => [
+              '_name'=>'login'
+            ],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ],
+                    'userModel' => 'TblUser'
+                ]
+            ],
+            'logoutRedirect' => [
+                'prefix' => 'Frontend',
+                'controller' => 'Pages',
+                'action' => 'display',
+                'home'
+            ]
+        ]);
     }
 
 }
