@@ -15,7 +15,12 @@ class Transaction extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
+        'parent_transaction_id' => true,
+        'category_id' => true,
+        'wallet_id' => true,
+        'amount' => true,
+        'note' => true,
+        'created_at' => true,
+        'updated_at'=>true
     ];
 }

@@ -57,6 +57,7 @@ use Cake\Routing\Filter\AssetFilter;
 
 
 Configure::load('setting_message_frontend');
+Configure::load('setting_message_backend');
 
 /**
  * Read configuration file and inject configuration into various

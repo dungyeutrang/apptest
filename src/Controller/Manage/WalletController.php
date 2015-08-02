@@ -3,6 +3,9 @@
 namespace App\Controller\Manage;
 
 use Cake\Core\Configure;
+use DateTime;
+
+//use App\Model\Table\TransactionTable;
 
 /**
  * Wallet Controller
@@ -12,6 +15,11 @@ use Cake\Core\Configure;
 class WalletController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     /**
      * Index method
      *
@@ -19,28 +27,11 @@ class WalletController extends AppController
      */
     public function index()
     {
-//        $this->paginate = [
-//            'contain' => ['TblUser']
-//        ];
-//        $this->loadModel('Category');
-//        $this->set('wallet', $this->paginate($this->Wallet));
-//        $this->set('_serialize', ['wallet']);
-        
-      
-         $data=[
-             'name'=>'kdqpdqkdpq',
-             'user_id'=>$this->Auth->user('id'),
-             'amount'=>1200,
-             'category'=>[
-                 [
-                     'name'=>'nwofnww',
-                     'catalog_id'=>1
-                 ]
-             ]
-         ];
-         $wallet = $this->Wallet->newEntity($data);
-         $this->Wallet->save($wallet, ['associated'=>['category']]);
-        die();
+        $this->paginate = [
+            'contain' => ['TblUser']
+        ];
+        $this->set('wallet', $this->paginate($this->Wallet->find()->where(['user_id' => $this->Auth->user('id')])));
+        $this->set('_serialize', ['wallet']);
     }
 
     /**
@@ -69,24 +60,28 @@ class WalletController extends AppController
         $wallet = $this->Wallet->newEntity();
         if ($this->request->is('post')) {
             $wallet->user_id = $this->Auth->user('id');
-            $wallet->date_created = date("Y-m-d H:m:s");
+            $wallet->created_at = date("Y-m-d H:m:s");
             if ($this->Wallet->checkWalletDefault($this->Wallet, $this->Auth->user('id'))) {
                 $wallet->is_default = 1;
             }
-
-//              $this->request->data['category']=[['catalog_id' => 1, 'name' => 'chi tieu']];
-//              var_dump($this->request->data);die;
-
+            if ($this->request->data('amount')) {
+                $data = [
+                    'category_id' => 3, // default when add new wallet
+                    'note' => Configure::read('message.add_transaction_wallet_new'),
+                    'amount' => $this->request->data('amount'),
+                    'created_at' => new DateTime('now')
+                ];
+                $this->request->data['transaction'] = [$data];
+            }
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
-            $wallet->category = [['catalog_id' => 1, 'name' => 'chi tieu']];
-            $wallet->dirty('category', true);
-//            var_dump($wallet);die;
-//            var_dump($this->Wallet->save($wallet, ['associated' => ['category']]));die;
-            
-            if ($this->Wallet->save($wallet, ['associated' => ['category']])) {
+            $this->Wallet->connection()->begin();
+            try {
+                $this->Wallet->save($wallet, ['associated' => ['Transaction']]);
+                $this->Wallet->connection()->commit();
                 $this->Flash->success(__(Configure::read('message.add_wallet_success')));
                 return $this->redirect(['action' => 'index']);
-            } else {
+            } catch (Exception $ex) {
+                $this->Wallet->connection()->rollback();
                 $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
             }
         }
@@ -108,12 +103,13 @@ class WalletController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $this->request->data['updated_at'] = new DateTime('now');
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
             if ($this->Wallet->save($wallet)) {
-                $this->Flash->success(__('The wallet has been saved.'));
+                $this->Flash->success(__(Configure::read('message.update_wallet_success')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The wallet could not be saved. Please, try again.'));
+                $this->Flash->error(__(Configure::read('message.update_wallet_fail')));
             }
         }
         $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);

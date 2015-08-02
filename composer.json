@@ -26,7 +26,8 @@
         },
          "classmap": [
             "lib"
-        ] 
+        ],
+        "files":["lib/Constant.php"]
     },
     "autoload-dev": {
         "psr-4": {

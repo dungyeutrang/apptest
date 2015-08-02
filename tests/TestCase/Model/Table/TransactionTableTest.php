@@ -18,8 +18,9 @@ class TransactionTableTest extends TestCase
      */
     public $fixtures = [
         'app.transaction',
-        'app.parent_transactions',
-        'app.tbl_category'
+        'app.category',
+        'app.tbl_wallet',
+        'app.mst_catalog'
     ];
 
     /**

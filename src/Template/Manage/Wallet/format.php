@@ -1,13 +1,16 @@
 <?= $this->HTML->css('/Manage/css/wallet/add', ['block' => 'css_header']) ?>
 <div class="row wrapper border-bottom white-bg page-heading" id="head-title">
     <div class="col-lg-10">
-        <h2>Add Wallet</h2>
+        <h2>Add Category</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="index.html">Manage</a>
             </li>
             <li>
                 <a>Wallet</a>
+            </li>
+            <li>
+                <a>Category</a>
             </li>
             <li class="active">
                 <strong>Add</strong>
@@ -33,13 +36,18 @@
                 </div>
             </div>
             <div class="ibox-content">
-            <p>Add name and amount for this wallet</p>
-                 <?= $this->Form->create($wallet,array('class'=>'form-horizontal')) ?>
-                    <?php
-                        echo $this->Form->input('name',array('class'=>'form-control','placeholder'=>'salary..'));
-                        echo $this->Form->input('amount',array('class'=>'form-control','placeholder'=>'500.000','id'=>'amount','type'=>'text'));                        
-                    ?>
-                <?= $this->Form->button(__('Add'),array('class'=>'btn btn-info')) ?>
+                <p>Add new category  for this wallet</p>
+                <?= $this->Form->create($category, array('enctype' => 'multipart/form-data', 'class' => 'form-horizontal')) ?>
+                <?php
+                echo $this->Form->input('catalog_id', ['label' => 'Kind Of Category', 'options' => $mstCatalog, 'class' => 'form-control']);
+                echo $this->Form->input('parent_id', ['label' => 'Parent Category', 'options' => $parentCategory, 'class' => 'form-control']);
+                echo $this->Form->input('name', ['class' => 'form-control']);
+                ?>
+                <div class="input file required">
+                    <label for="avatar">Avatar</label>
+                    <input type="file" name="avatar" div="input" class="form-control" required="required" id="avatar">
+                </div>
+                <?= $this->Form->button(__('Add'), array('class' => 'btn btn-info')) ?>
                 <?= $this->Form->end() ?>
             </div>
         </div>
@@ -47,4 +55,4 @@
 </div>
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
-<?= $this->HTML->script('/Manage/js/wallet/add',array('block'=>'scriptBottom')) ?>
+<?= $this->HTML->script('/Manage/js/wallet/add', array('block' => 'scriptBottom')) ?>

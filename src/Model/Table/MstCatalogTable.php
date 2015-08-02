@@ -52,4 +52,8 @@ class MstCatalogTable extends Table
 
         return $validator;
     }
+
+    public function checkExist($id){
+        return $this->find()->where(['id'=>$id])->first();
+    }
 }

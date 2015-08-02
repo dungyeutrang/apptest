@@ -27,6 +27,7 @@ class TransactionFixture extends TestFixture
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'parent_transaction_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'category_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'wallet_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'amount' => ['type' => 'float', 'length' => null, 'precision' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => ''],
         'note' => ['type' => 'text', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'create_at' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -37,10 +38,13 @@ class TransactionFixture extends TestFixture
             'id' => ['type' => 'index', 'columns' => ['id'], 'length' => []],
             'catalog_id' => ['type' => 'index', 'columns' => ['category_id'], 'length' => []],
             'category_id' => ['type' => 'index', 'columns' => ['category_id'], 'length' => []],
+            'user_id' => ['type' => 'index', 'columns' => ['wallet_id'], 'length' => []],
+            'wallet_id' => ['type' => 'index', 'columns' => ['wallet_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'tbl_transaction_ibfk_2' => ['type' => 'foreign', 'columns' => ['category_id'], 'references' => ['tbl_category', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
+            'tbl_transaction_ibfk_3' => ['type' => 'foreign', 'columns' => ['wallet_id'], 'references' => ['tbl_wallet', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -59,11 +63,12 @@ class TransactionFixture extends TestFixture
             'id' => 1,
             'parent_transaction_id' => 1,
             'category_id' => 1,
+            'wallet_id' => 1,
             'amount' => 1,
             'note' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'create_at' => '2015-07-30 09:37:20',
-            'update_at' => '2015-07-30 09:37:20',
-            'delete_at' => '2015-07-30 09:37:20',
+            'create_at' => '2015-08-01 18:00:30',
+            'update_at' => '2015-08-01 18:00:30',
+            'delete_at' => '2015-08-01 18:00:30',
             'status' => 1
         ],
     ];

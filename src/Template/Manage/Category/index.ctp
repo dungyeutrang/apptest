@@ -1,59 +1,109 @@
-<div class="actions columns large-2 medium-3">
-    <h3><?= __('Actions') ?></h3>
-    <ul class="side-nav">
-        <li><?= $this->Html->link(__('New Category'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Tbl Wallet'), ['controller' => 'TblWallet', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Tbl Wallet'), ['controller' => 'TblWallet', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Mst Catalog'), ['controller' => 'MstCatalog', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Mst Catalog'), ['controller' => 'MstCatalog', 'action' => 'add']) ?></li>
-    </ul>
-</div>
-<div class="category index large-10 medium-9 columns">
-    <table cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th><?= $this->Paginator->sort('id') ?></th>
-            <th><?= $this->Paginator->sort('wallet_id') ?></th>
-            <th><?= $this->Paginator->sort('catalog_id') ?></th>
-            <th><?= $this->Paginator->sort('parent_id') ?></th>
-            <th><?= $this->Paginator->sort('name') ?></th>
-            <th><?= $this->Paginator->sort('is_default') ?></th>
-            <th><?= $this->Paginator->sort('status') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($category as $category): ?>
-        <tr>
-            <td><?= $this->Number->format($category->id) ?></td>
-            <td>
-                <?= $category->has('tbl_wallet') ? $this->Html->link($category->tbl_wallet->name, ['controller' => 'TblWallet', 'action' => 'view', $category->tbl_wallet->id]) : '' ?>
-            </td>
-            <td>
-                <?= $category->has('mst_catalog') ? $this->Html->link($category->mst_catalog->name, ['controller' => 'MstCatalog', 'action' => 'view', $category->mst_catalog->id]) : '' ?>
-            </td>
-            <td>
-                <?= $category->has('parent_category') ? $this->Html->link($category->parent_category->name, ['controller' => 'Category', 'action' => 'view', $category->parent_category->id]) : '' ?>
-            </td>
-            <td><?= h($category->name) ?></td>
-            <td><?= $this->Number->format($category->is_default) ?></td>
-            <td><?= $this->Number->format($category->status) ?></td>
-            <td class="actions">
-                <?= $this->Html->link(__('View'), ['action' => 'view', $category->id]) ?>
-                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $category->id]) ?>
-                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $category->id], ['confirm' => __('Are you sure you want to delete # {0}?', $category->id)]) ?>
-            </td>
-        </tr>
+<?= $this->HTML->css('/Manage/css/datatable_all_page', ['block' => 'css_header']) ?>
+<!-- Data table CSS -->
+<?= $this->element('Manage/data_table_css') ?>
 
-    <?php endforeach; ?>
-    </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-        </ul>
-        <p><?= $this->Paginator->counter() ?></p>
+<div class="row wrapper border-bottom white-bg page-heading" id="head-title">
+    <div class="col-lg-10">
+        <h2>Manage Category</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Manage</a>
+            </li>
+            <li>
+                <a>Wallet</a>
+            </li>
+            <li>
+                <a>Category</a>
+            </li>
+            <li class="active">
+                <strong>Index</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
     </div>
 </div>
+
+<!-- message success -->
+<?= $this->Flash->render(); ?>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>List Wallet </h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">Config option 1</a>
+                        </li>
+                        <li><a href="#">Config option 2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div> <!-- end ibox-title -->
+            <div class="ibox-content">
+                <?= $this->HTML->link('Add', ['_name'=>'category_add','wallet_id'=>$walletId], ['id' => 'add-new-record', 'class' => 'btn btn-primary col-sm-2 col-md-2 col-lg-1 col-xs-2']) ?>
+                <table class="table table-striped table-bordered table-hover dataTables-content" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1"><?= $this->Paginator->sort('id'); ?></th>
+                            <th class="col-sm-3"><?= $this->Paginator->sort('wallet_id') ?></th>
+                            <th class="col-sm-2"><?= $this->Paginator->sort('catalog_id') ?></th>
+                            <th class="col-sm-3"><?= $this->Paginator->sort('name') ?></th>
+                            <th class="col-sm-1"><?= $this->Paginator->sort('avatar') ?></th>
+                            <th class="actions col-sm-2"><?= __('Actions') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $i=1; foreach ($category as $category): ?>
+                            <tr>
+                                <td class="col-sm-1"><?= $i++ ?></td>
+                                <td class="col-sm-3">
+                                    <?= h($walletName) ?>
+                                </td>
+                                <td class="col-sm-2">
+                                    <?= $category->has('mst_catalog') ? $this->Html->link($category->mst_catalog->name, ['controller' => 'MstCatalog', 'action' => 'view', $category->mst_catalog->id]) : '' ?>
+                                </td>                                
+                                <td class="col-sm-3"><?= h($category->name) ?></td>
+                                <td class="col-sm-1"><?= $this->HTML->image($category->avatar,array('class'=>'img-circle avatar-category')) ?></td>
+                                <td class="actions col-sm-2">
+                                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $category->id],array('class'=>'btn btn-warning')) ?>
+                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $category->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $category->id)]) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <!-- PAGINATION-->
+                <div class="row">
+                    <nav class="pull-right" id="nav-pagination">
+                        <ul class="pagination">
+                            <?= $this->Paginator->prev('« Previous') ?>
+                            <?= $this->Paginator->numbers() ?>
+                            <?= $this->Paginator->next('Next »') ?>
+                        </ul>
+                        <p><?=
+                            $this->Paginator->counter([
+                                'format' => 'Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total'
+                            ])
+                            ?></p>
+                    </nav>
+                </div>
+            </div> <!-- end ibox content -->
+        </div>
+    </div>
+</div>
+<!-- Configuration --->
+<?= $this->element('Manage/configuration') ?>
+<!-- Data table JS -->
+<?= $this->element('Manage/data_table_js') ?>
+<?= $this->HTML->script('../Manage/js/datatable_all_page', array('block' => 'scriptBottom')) ?>

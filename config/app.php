@@ -221,8 +221,8 @@ return [
              */
             //'port' => 'nonstandard_port_number',
             'username' => 'root',
-            'password' => '',
-            'database' => 'money_lover',
+            'password' => 'ainopdiu',
+            'database' => 'money_love',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,

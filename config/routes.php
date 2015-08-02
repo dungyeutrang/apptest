@@ -60,10 +60,20 @@ Router::scope('/', function ($routes) {
 
     $routes->prefix('manage', function($routes) {
         $routes->connect('/index', ['controller' => 'Home', 'action' => 'index'], ['_name' => 'home']);
+        // manage wallet
         $routes->connect('/wallet/index', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet']);
         $routes->connect('/wallet/add-wallet', ['controller' => 'Wallet', 'action' => 'add'], ['_name' => 'wallet_add']);
         $routes->connect('/wallet/edit-wallet/:id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
         $routes->connect('/wallet/delete-wallet/:id', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet_delete', 'id' => '\d+']);
+        // manage category
+        $routes->connect('/category/index/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/category/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/category/add/:wallet_id', ['controller' => 'Category', 'action' => 'add'], ['_name' => 'category_add', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+
+        $routes->connect('/category/getdata/:wallet_id', ['controller' => 'Category', 'action' => 'getData'], ['_name' => 'category_get_data','wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+
+        $routes->connect('/category/edit/:id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'category_edit', 'id' => '\d+']);
+        $routes->connect('/category/delete/:id', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'category_delete', 'id' => '\d+']);
         $routes->fallbacks('InflectedRoute');
     });
 
