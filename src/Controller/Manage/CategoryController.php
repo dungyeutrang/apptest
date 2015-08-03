@@ -20,6 +20,7 @@ class CategoryController extends AppController
         parent::initialize();
         $this->loadModel('Wallet');
         $this->loadModel('MstCatalog');
+        $this->loadModel('CategoryDelete');
         $this->upload = new UploadFile();
     }
 
@@ -74,15 +75,15 @@ class CategoryController extends AppController
     {
         $id = $this->request->wallet_id;
         $dataWallet = $this->Wallet->checkExist($id);
-
         if (is_null($dataWallet)) {
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
             $this->redirect(['_name' => 'wallet']);
         }
         $category = $this->Category->newEntity();
         if ($this->request->is('post')) {
+            $this->request->data['wallet_id'] = $id;
             $category = $this->Category->patchEntity($category, $this->request->data);
-//            var_dump($this->Category->save($category));die;
+
             if ($this->Category->save($category)) {
                 $dirUpload = '/Uploads' . '/' . $this->Auth->user('id');
                 $this->upload->addDir($dirUpload);
@@ -98,15 +99,15 @@ class CategoryController extends AppController
                 $this->Flash->error(__(Configure::read('message.add_category_fail')));
             }
         }
-        $mstCatalog = $this->Category->MstCatalog->find('list');
-        $parentCategory = $this->Category->find('list', ['limit' => 200])->where(['catalog_id' => 1])->toArray();
+        $mstCatalog = $this->Category->getMstCatalog();
+        $parentCategory = $this->Category->getParentidAdd($id);
         $this->set(compact('category', 'mstCatalog', 'parentCategory'));
         $this->set('_serialize', ['category']);
         $this->set('walletId', $id);
     }
 
     /**
-     * change data parent id 
+     * change data parent id for add method 
      */
     public function getData()
     {
@@ -127,6 +128,31 @@ class CategoryController extends AppController
         }
     }
 
+    public function getDataUpdate()
+    {
+
+        $response = array();
+        $walletId = $this->request->wallet_id;
+        $catalogId = $this->request->data('catalogId');
+        $parentId = $this->request->parent_id;
+        $id = $this->request->id;
+
+        $dataWallet = $this->Wallet->checkExist($walletId);
+        $dataCatalog = $this->MstCatalog->checkExist($catalogId);
+        $category = $this->Category->checkExist($id);
+
+        if (is_null($dataWallet || is_null($dataCatalog) || is_null($category))) {
+            $response['code'] = 1;
+            echo json_encode($response);
+            die;
+        } else {
+            $response['code'] = 2;
+            $response['data'] = $this->Category->getCategoryForUpdate($catalogId, $parentId, $walletId, $id);
+            echo json_encode($response);
+            die();
+        }
+    }
+
     /**
      * Edit method
      *
@@ -134,22 +160,40 @@ class CategoryController extends AppController
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit()
     {
-        $category = $this->Category->get($id, [
-            'contain' => []
-        ]);
+        $id = $this->request->id;
+        $category = $this->Category->checkExist($id);
+        if (!$category) {
+            $this->Flash->error(__(Configure::read('message.category_not_found')));
+            $this->redirect(['_name' => 'category']);
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $avatarOld = $category->avatar;
             $category = $this->Category->patchEntity($category, $this->request->data);
+            if (empty($this->request->data['avatar']['name'])) {
+                $category->avatar = $avatarOld;
+            }
             if ($this->Category->save($category)) {
-                $this->Flash->success(__('The category has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                if (!empty($this->request->data['avatar']['name'])) {
+                    $dirUpload = '/Uploads' . '/' . $this->Auth->user('id');
+                    $this->upload->deleteFile($avatarOld);
+                    $filename = $this->request->data['avatar']['name'];
+                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                    $avatar = $dirUpload . '/' . date('Y-m-d-H-m-s') . '.' . $extension;
+                    move_uploaded_file($this->request->data['avatar']['tmp_name'], BASE_URL . $avatar);
+                    $category->avatar = $avatar;
+                    $this->Category->save($category);
+                }
+                $this->Flash->success(__(Configure::read('message.update_category_success')));
+                return $this->redirect(['action' => 'index', 'wallet_id' => $category->wallet_id]);
             } else {
-                $this->Flash->error(__('The category could not be saved. Please, try again.'));
+                $this->Flash->error(__(Configure::read('message.update_category_fail')));
             }
         }
-        $mstCatalog = $this->Category->MstCatalog->find('list', ['limit' => 200]);
-        $parentCategory = $this->Category->ParentCategory->find('list', ['limit' => 200]);
+
+        $mstCatalog = $this->Category->getMstCatalog();
+        $parentCategory = $this->Category->getParentidUpdate($category->catalog_id, $category->parent_id, $category->wallet_id, $category->id);
         $this->set(compact('category', 'mstCatalog', 'parentCategory'));
         $this->set('_serialize', ['category']);
     }
@@ -161,16 +205,45 @@ class CategoryController extends AppController
      * @return void Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete()
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $category = $this->Category->get($id);
-        if ($this->Category->delete($category)) {
-            $this->Flash->success(__('The category has been deleted.'));
-        } else {
-            $this->Flash->error(__('The category could not be deleted. Please, try again.'));
+        $id = $this->request->id;
+        $walletId = $this->request->wallet_id;
+        $dataWallet = $this->Wallet->checkExist($walletId);
+        if (is_null($dataWallet)) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            $this->redirect(['_name' => 'wallet']);
         }
-        return $this->redirect(['action' => 'index']);
+        $category = $this->Category->checkExist($id);
+        if (!$category) {
+            $this->Flash->error(__(Configure::read('message.category_not_found')));
+            $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+        }
+
+        // check transaction of wallet and category
+        $transaction = $this->Category->getTransaction($walletId, $category->id)->toArray();
+        if (count($transaction) == 0) {
+            if ($category->is_default == 1 && $category->is_perform == 1) {
+                if ($this->CategoryDelete->add($walletId, $category->id)) {
+                    $this->Flash->success(__(Configure::read('message.delete_category_success')));
+                } else {
+                    $this->Flash->error(__(Configure::read('message.delete_category_fail')));
+                }
+            } else if ($category->is_default == 1 && $category->is_perform == 0) {
+                // message error delete 
+                $this->Flash->error(__(Configure::read('message.category_default')));
+            } else {
+                $category->status = 1;
+                if ($this->Category->save($category)) {
+                    $this->Flash->success(__(Configure::read('message.delete_category_success')));
+                } else {
+                    $this->Flash->error(__(Configure::read('message.delete_category_fail')));
+                }
+            }
+        } else {
+            $this->Flash->error(__(Configure::read('message.delete_category_constraint')));
+        }
+        $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
     }
 
 }

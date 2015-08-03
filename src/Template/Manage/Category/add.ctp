@@ -41,12 +41,9 @@
                 <?php
                 echo $this->Form->input('catalog_id', ['label' => 'Kind Of Category', 'options' => $mstCatalog, 'class' => 'form-control']);
                 echo $this->Form->input('parent_id', ['required'=>false,'type'=>'select','label' => 'Parent Category', 'options' => $parentCategory, 'class' => 'form-control','empty'=>true]);
-                echo $this->Form->input('name', ['class' => 'form-control']);
+                echo $this->Form->input('name', ['required'=>false,'class' => 'form-control']);
+                echo $this->Form->input('avatar', ['label'=>'Avatar','type'=>'file','required'=>false,'class' => 'form-control']);
                 ?>
-                <div class="input">
-                    <label for="avatar">Avatar</label>
-                    <input type="file" name="avatar" div="input" class="form-control" required="required" id="avatar">
-                </div>
                 <?= $this->Form->button(__('Add'), array('class' => 'btn btn-info')) ?>
                 <?= $this->Form->end() ?>
             </div>

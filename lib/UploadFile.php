@@ -2,9 +2,6 @@
 
 namespace lib;
 
-use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
-
 /**
  * @author John Doe <john.doe@example.com>
  */
@@ -26,5 +23,6 @@ class UploadFile
             mkdir($url);
         }
     }
+    
 
 }

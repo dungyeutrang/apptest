@@ -77,7 +77,7 @@
                                 <td class="col-sm-1"><?= $this->HTML->image($category->avatar,array('class'=>'img-circle avatar-category')) ?></td>
                                 <td class="actions col-sm-2">
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $category->id],array('class'=>'btn btn-warning')) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $category->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $category->id)]) ?>
+                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete','wallet_id'=>$walletId, 'id'=>$category->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $category->id)]) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

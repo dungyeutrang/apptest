@@ -36,3 +36,11 @@ button.btn{
      padding: 10px 10px 40px !important;
     
 }
+div.file{
+   margin-right: 0px; 
+   border: 0px;
+}
+img{
+    max-width: 96px;
+    max-height: 96px;
+}

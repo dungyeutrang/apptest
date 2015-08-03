@@ -1,8 +1,7 @@
 <?php
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Transaction;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -16,6 +15,8 @@ use Cake\Validation\Validator;
  */
 class TransactionTable extends Table
 {
+
+    public $id;
 
     /**
      * Initialize method
@@ -37,10 +38,10 @@ class TransactionTable extends Table
             'foreignKey' => 'wallet_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Transaction', [
-            'foreignKey' => 'wallet_id',
-//            'joinType' => 'INNER'
-        ]);
+//        $this->belongsTo('Transaction', [
+//            'foreignKey' => 'wallet_id',
+////            'joinType' => 'INNER'
+//        ]);
     }
 
     /**
@@ -52,23 +53,30 @@ class TransactionTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-            
+                ->add('id', 'valid', ['rule' => 'numeric'])
+                ->allowEmpty('id', 'create');
+
         $validator
-            ->add('amount', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('amount', 'create')
-            ->notEmpty('amount');
-            
+                ->add('amount', 'valid', ['rule' => 'numeric'])
+                ->requirePresence('amount', 'create')
+                ->notEmpty('amount');
+
         $validator
-            ->allowEmpty('note');
-            
+                ->allowEmpty('note');
+
         $validator
-            ->add('created_at', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('created_at', 'create')
-            ->notEmpty('created_at');
-            
+                ->add('created_at', 'valid', ['rule' => 'datetime'])
+                ->requirePresence('created_at', 'create')
+                ->notEmpty('created_at');
+
         return $validator;
+    }
+
+    public function getDataIndex($walletId)
+    {
+        $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                        ->andWhere(['DATE(Transaction.created_at)' => date('Y-m-d')])->andWhere(['Transaction.status' => 0]);
+        return $data;
     }
 
     /**
@@ -84,5 +92,6 @@ class TransactionTable extends Table
         $rules->add($rules->existsIn(['category_id'], 'Category'));
         $rules->add($rules->existsIn(['wallet_id'], 'Wallet'));
         return $rules;
-    }
+    }        
+
 }

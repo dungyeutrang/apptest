@@ -106,4 +106,5 @@
         </div>
     </div>
 </div>
-<?= $this->HTML->script('../Manage/js/configuration_all_page', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/configuration_all_page', array('block' => 'scriptBottom','inline'=>false)) ?>
+

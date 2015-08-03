@@ -1,18 +1,19 @@
 <?php
+// wallet 
+$config['message']['add_wallet_success'] = 'The wallet has been saved !';
+$config['message']['add_wallet_fail'] = 'The wallet could not be saved. Please, try again !';
+$config['message']['update_wallet_success'] = 'The wallet has been saved  !';
+$config['message']['update_wallet_fail'] = 'The wallet could not be saved. Please, try again  !';
+$config['message']['wallet_not_found'] = 'The wallet not found!';
 
-$config['message']['add_wallet_success'] = 'Add wallet success !';
-$config['message']['add_wallet_fail'] = 'Add wallet fail !';
-
-$config['message']['update_wallet_success'] = 'Update wallet success !';
-$config['message']['update_wallet_fail'] = 'Update wallet fail !';
-$config['message']['wallet_not_found'] = 'Wallet not valid !';
-
-
-$config['message']['add_category_success'] = 'Add Category success !';
-$config['message']['add_category_fail'] = 'Add Category fail !';
-
-$config['message']['update_category_success'] = 'Update Category success !';
-$config['message']['update_category_fail'] = 'Update Category fail !';
-$config['message']['wallet_category_found'] = 'Category not valid !';
-
+// category
+$config['message']['add_category_success'] = 'The category has been saved !';
+$config['message']['add_category_fail'] = 'The category could not be saved. Please, try again !';
+$config['message']['update_category_success'] = 'The category has been saved !';
+$config['message']['update_category_fail'] = 'The category could not be saved. Please, try again !';
+$config['message']['delete_category_success'] = 'The category has been deleted.';
+$config['message']['delete_category_fail'] = 'The category could not be deleted. Please, try again.!';
+$config['message']['delete_category_constraint'] = 'You must be delete all transaction of this category.!';
+$config['message']['category_default'] = 'The category default of system not be deleted.!';
+$config['message']['category_not_found'] = 'The category not found !';
 $config['message']['add_transaction_wallet_new'] = 'Initial Balance';

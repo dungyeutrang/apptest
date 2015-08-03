@@ -1,4 +1,4 @@
-<?= $this->HTML->css('/Manage/css/wallet/add', ['block' => 'css_header']) ?>
+<?= $this->HTML->css('/Manage/css/wallet/add', ['block' => 'css_header','inline'=>false]) ?>
 <div class="row wrapper border-bottom white-bg page-heading" id="head-title">
     <div class="col-lg-10">
         <h2>Add Wallet</h2>
@@ -47,4 +47,4 @@
 </div>
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
-<?= $this->HTML->script('/Manage/js/wallet/add',array('block'=>'scriptBottom')) ?>
+<?= $this->HTML->script('/Manage/js/wallet/add',array('block'=>'scriptBottom','inline'=>false)) ?>

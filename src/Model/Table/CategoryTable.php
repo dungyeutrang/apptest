@@ -2,8 +2,6 @@
 
 namespace App\Model\Table;
 
-use App\Model\Entity\Category;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -19,12 +17,15 @@ use Cake\Validation\Validator;
 class CategoryTable extends Table
 {
 
+    public $id; // id of wallet id
+
     /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
      * @return void
      */
+
     public function initialize(array $config)
     {
         parent::initialize($config);
@@ -37,6 +38,14 @@ class CategoryTable extends Table
         ]);
         $this->belongsTo('MstCatalog', [
             'foreignKey' => 'catalog_id',
+        ]);
+
+        $this->belongsTo('Transaction', [
+            'foreignKey' => 'category_id',
+        ]);
+
+        $this->hasOne('CategoryDelete', [
+            'foreignKey' => 'category_id',
         ]);
     }
 
@@ -62,14 +71,14 @@ class CategoryTable extends Table
                         $data = $this->find()->where(['id' => $value])->first();
                         if ($data) {
                             return true;
-                        }else {
+                        } else {
                             return false;
                         }
                     }])
                         ->allowEmpty('parent_id');
 
                 $validator
-                        ->add('avatar', 'file', ['rule' => ['mimeType', ['image/jpeg', 'image/png']]])
+                        ->add('avatar', 'file', ['rule' => array('mimeType', array('image/gif', 'image/png', 'image/jpg', 'image/jpeg')), 'message' => 'Type of image invalid'])
                         ->requirePresence('avatar', 'create')
                         ->notEmpty('avatar');
 
@@ -78,24 +87,8 @@ class CategoryTable extends Table
                         ->requirePresence('name', 'create')
                         ->notEmpty('name');
 
-//        $validator
-//            ->add('is_default', 'valid', ['rule' => 'numeric'])
-//            ->requirePresence('is_default', 'create')
-//            ->notEmpty('is_default');
-//        $validator
-//            ->add('status', 'valid', ['rule' => 'numeric'])
-//            ->requirePresence('status', 'create')
-//            ->notEmpty('status');
-
                 return $validator;
             }
-
-//    public function existData($check)
-//    {
-//       $values = array_values($check);
-//        $value = $values[0];
-//        var_dump($value);die;
-//    }
 
             /**
              * Returns a rules checker object that will be used for validating
@@ -106,9 +99,8 @@ class CategoryTable extends Table
              */
             public function buildRules(RulesChecker $rules)
             {
-                $rules->add($rules->existsIn(['wallet_id'], 'TblWallet'));
+                $rules->add($rules->existsIn(['wallet_id'], 'Wallet'));
                 $rules->add($rules->existsIn(['catalog_id'], 'MstCatalog'));
-//        $rules->add($rules->existsIn(['parent_id'], 'ParentCategory'));
                 return $rules;
             }
 
@@ -119,16 +111,159 @@ class CategoryTable extends Table
              */
             public function getCategoryByWallet($id)
             {
+                $this->id = $id;
                 return $this->find()->where(function($exp) {
-                            return $exp->isNull('wallet_id');
-                        })->orWhere(['wallet_id' => $id])->andWhere(['Category.status' => 0]);
+                                    return $exp->isNull('wallet_id');
+                                })->orWhere(['wallet_id' => $id])
+                                ->andWhere(['Category.status' => 0])
+                                ->andWhere(function($exp) {
+                                    $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                                    return $exp->notIn('Category.id', $data);
+                                });
             }
 
+            /**
+             *  check Exist record
+             * @param type $id
+             * @return boolean
+             */
+            public function checkExist($id)
+            {
+                $data = $this->find()->where(['id' => $id])->first();
+                if ($data) {
+                    return $data;
+                } else {
+                    return false;
+                }
+            }
+
+            /**
+             * get Parent id for update 
+             * @param type $catalogId
+             * @param type $parentId
+             * @return type
+             */
+            public function getParentidUpdate($catalogId, $parentId, $walletId, $id)
+            {
+                $this->id = $walletId;
+                return $this->find('list', ['limit' => 200])
+                                ->where(function($exp) {
+                                    return $exp->isNull('wallet_id');
+                                })->orWhere(['wallet_id' => $walletId])
+                                ->andWhere(['catalog_id' => $catalogId])
+                                ->andWhere(['parent_id' => 0, 'status' => 0])
+                                ->orWhere(['parent_id' => $parentId, 'Category.id' => $id, 'catalog_id' => $catalogId])
+                                ->andWhere(function($exp) {
+                                    $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                                    return $exp->notIn('Category.id', $data);
+                                });
+            }
+
+            /**
+             * get Parent id for add
+             * @walletId
+             * @return type
+             */
+            public function getParentidAdd($walletId)
+            {
+                $this->id = $walletId;
+                $data = $this->find('list', ['limit' => 200])
+                        ->andWhere(function($exp) {
+                            return $exp->isNull('wallet_id');
+                        })->orWhere(['wallet_id' => $this->id])
+                        ->andWhere(['catalog_id' => 1, 'parent_id' => 0, 'status' => 0])
+                        ->andWhere(function($exp) {
+                    $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                    return $exp->notIn('Category.id', $categoryDelete);
+                });
+                return $data;
+            }
+
+            /**
+             * get category for change ajax
+             * @param type $walletId
+             * @param type $catalogId
+             * @return type
+             */
             public function getCategoryForAdd($walletId, $catalogId)
             {
-                return $this->find()->select(['id', 'name'])->where(function($exp) {
-                            return $exp->isNull('wallet_id');
-                        })->orWhere(['wallet_id' => $walletId])->andWhere(['catalog_id' => $catalogId])->toArray();
+                $this->id = $walletId;
+                return $this->find()
+                                ->select(['id', 'name'])->where(function($exp) {
+                                    return $exp->isNull('wallet_id');
+                                })->orWhere(['wallet_id' => $this->id])
+                                ->andWhere(['catalog_id' => $catalogId, 'parent_id' => 0, 'status' => 0])
+                                ->andWhere(function($exp) {
+                                    $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                                    return $exp->notIn('Category.id', $categoryDelete);
+                                })
+                                ->toArray();
+            }
+
+            /**
+             * get category when update chane ajax
+             * 
+             * @param type $catalogId
+             * @param type $parentId
+             * @param type $walletId
+             * @param type $id
+             * @return type
+             */
+            public function getCategoryForUpdate($catalogId, $parentId, $walletId, $id)
+            {
+                $this->id = $walletId;
+                return $this->find()
+                                ->select(['id', 'name'])
+                                ->where(function($exp) {
+                                    return $exp->isNull('wallet_id');
+                                })->orWhere(['wallet_id' => $walletId])
+                                ->andWhere(['catalog_id' => $catalogId])
+                                ->andWhere(['parent_id' => 0, 'status' => 0])
+                                ->orWhere(['parent_id' => $parentId, 'Category.id' => $id, 'catalog_id' => $catalogId])
+                                ->andWhere(function($exp) {
+                                    $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                                    return $exp->notIn('Category.id', $data);
+                                });
+            }
+
+            /**
+             * get All catalog
+             * @return type
+             */
+            public function getMstCatalog()
+            {
+                return $this->MstCatalog->find('list', ['limit' => 200]);
+            }
+
+            /**
+             * get transaction 
+             * @param type $walletId
+             * @param type $categoryId
+             * @return type
+             */
+            public function getTransaction($walletId, $categoryId)
+            {
+                return $this->Transaction->find()
+                                ->where(['wallet_id' => $walletId, 'category_id' => $categoryId, 'Transaction.status' => 0]);
+            }
+
+            /**
+             * 
+             * @param type $id
+             * @return type
+             */
+            public function getCategoryforTransaction($id)
+            {
+                $this->id = $id;
+                return $this->find('list')->where(function($exp) {
+                                    return $exp->isNull('wallet_id');
+                                })->orWhere(['wallet_id' => $id])
+                                ->andWhere(['Category.status' => 0])
+                                ->andWhere(function($exp) {
+                                    $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                                    return $exp->notIn('Category.id', $data);
+                                });
             }
 
         }
+        

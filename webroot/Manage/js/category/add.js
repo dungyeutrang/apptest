@@ -7,6 +7,7 @@ function changeData(url) {
             data: {_csrfToken: token,catalogId: $(this).val()},
             success: function (data) {
                 if(data.code===2){
+                    console.log(data);
                     $('#parent-id').empty();
                     $('#parent-id').append('<option value></option>');
                     result=data.data;

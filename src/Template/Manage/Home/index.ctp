@@ -54,7 +54,6 @@
                 <span class="h4 font-bold m-t block">$ 16,822</span>
                 <small class="text-muted m-b block">Half-year revenue margin</small>
             </div>
-
         </div>
     </div>
     <div class="col-sm-3">
@@ -78,10 +77,8 @@
             <div class="m-t">
                 <small>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
             </div>
-
         </div>
     </div>
-
 </div>
 <div class="row">
     <div class="col-lg-12">
@@ -111,9 +108,7 @@
                         </div>
                         <div class="ibox-content">
                             <div>
-
                                 <div class="pull-right text-right">
-
                                     <span class="bar_dashboard">5,3,9,6,5,9,7,3,5,2,4,7,3,2,7,9,6,4,5,7,3,2,1,0,9,5,6,8,3,2,1</span>
                                     <br/>
                                     <small class="font-bold">$ 20 054.43</small>
@@ -276,7 +271,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-lg-4">
                     <div class="ibox float-e-margins">
@@ -305,7 +299,6 @@
                             <small><i class="fa fa-map-marker"></i> Meeting is on 6:00am. Check your schedule to see detail.</small>
                         </div>
                         <div class="ibox-content inspinia-timeline">
-
                             <div class="timeline-item">
                                 <div class="row">
                                     <div class="col-xs-3 date">
@@ -316,10 +309,8 @@
                                     </div>
                                     <div class="col-xs-7 content no-top-border">
                                         <p class="m-b-xs"><strong>Meeting</strong></p>
-
                                         <p>Conference on the sales results for the previous year. Monica please examine sales trends in marketing and products. Below please find the current status of the
                                             sale.</p>
-
                                         <p><span data-diameter="40" class="updating-chart">5,3,9,6,5,9,7,3,5,2,5,3,9,6,5,9,4,7,3,2,9,8,7,4,5,1,2,9,5,4,7,2,7,7,3,5,2</span></p>
                                     </div>
                                 </div>
@@ -402,11 +393,9 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="footer">
@@ -422,3 +411,4 @@
 
 <!-- custom index -->
     <?= $this->Html->script('/Manage/js/index.js',['block'=>'scriptBottom']) ?>    
+    <?= $this->element('Manage/home_js') ?>

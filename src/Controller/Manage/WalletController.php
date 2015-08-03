@@ -56,7 +56,7 @@ class WalletController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function add()
-    {
+    {  
         $wallet = $this->Wallet->newEntity();
         if ($this->request->is('post')) {
             $wallet->user_id = $this->Auth->user('id');
@@ -64,29 +64,33 @@ class WalletController extends AppController
             if ($this->Wallet->checkWalletDefault($this->Wallet, $this->Auth->user('id'))) {
                 $wallet->is_default = 1;
             }
-            if ($this->request->data('amount')) {
+            $amount =  str_replace('.', '',$this->request->data['amount']);                       
+            if ($this->request->data('amount')){
                 $data = [
                     'category_id' => 3, // default when add new wallet
                     'note' => Configure::read('message.add_transaction_wallet_new'),
-                    'amount' => $this->request->data('amount'),
+                    'amount' => $amount,
                     'created_at' => new DateTime('now')
                 ];
                 $this->request->data['transaction'] = [$data];
             }
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
+            $wallet->amount=$amount;
             $this->Wallet->connection()->begin();
             try {
-                $this->Wallet->save($wallet, ['associated' => ['Transaction']]);
+                if($this->Wallet->save($wallet, ['associated' => ['Transaction']])){                    
                 $this->Wallet->connection()->commit();
                 $this->Flash->success(__(Configure::read('message.add_wallet_success')));
                 return $this->redirect(['action' => 'index']);
+                }else{                    
+                $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
+                }                
             } catch (Exception $ex) {
                 $this->Wallet->connection()->rollback();
-                $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
             }
         }
-        $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);
-        $this->set(compact('wallet', 'tblUser'));
+//        $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);
+        $this->set(compact('wallet'));
         $this->set('_serialize', ['wallet']);
     }
 
@@ -97,11 +101,13 @@ class WalletController extends AppController
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($id)
     {
-        $wallet = $this->Wallet->get($id, [
-            'contain' => []
-        ]);
+        $wallet = $this->Wallet->checkExist($id);
+        if (!$wallet) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            return $this->redirect(['action' => 'index']);
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $this->request->data['updated_at'] = new DateTime('now');
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
@@ -112,8 +118,8 @@ class WalletController extends AppController
                 $this->Flash->error(__(Configure::read('message.update_wallet_fail')));
             }
         }
-        $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);
-        $this->set(compact('wallet', 'tblUser'));
+//        $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);
+        $this->set(compact('wallet'));
         $this->set('_serialize', ['wallet']);
     }
 

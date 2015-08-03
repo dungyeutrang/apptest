@@ -221,7 +221,7 @@ return [
              */
             //'port' => 'nonstandard_port_number',
             'username' => 'root',
-            'password' => 'ainopdiu',
+            'password' => '',
             'database' => 'money_love',
             'encoding' => 'utf8',
             'timezone' => 'UTC',

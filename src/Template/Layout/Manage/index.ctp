@@ -20,11 +20,10 @@
 
             <!-- content -->
              <?= $this->fetch('content') ?>
-
             </div>
         </div>
         <!-- js -->
     <?= $this->fetch('script',$this->element('Manage/page_js')) ?>
-    <?= $this->fetch('scriptBottom') ?>
+    <?= $this->fetch('scriptBottom',['block' => true]) ?>
     </body>
 </html>
