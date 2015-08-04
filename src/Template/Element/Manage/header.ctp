@@ -17,4 +17,6 @@
    <!-- Custom css -->
    <?= $this->Html->css('/Manage/css/animate') ?>   
    
-   <?= $this->Html->css('/Manage/css/style') ?>   
+   <?= $this->Html->css('/Manage/css/style') ?>
+
+   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">   

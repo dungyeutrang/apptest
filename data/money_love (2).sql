@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 03, 2015 at 12:36 PM
+-- Generation Time: Aug 04, 2015 at 12:40 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `tbl_category` (
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `status` int(11) NOT NULL DEFAULT '0',
   `is_perform` tinyint(4) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `tbl_category`
@@ -74,11 +74,7 @@ INSERT INTO `tbl_category` (`id`, `wallet_id`, `catalog_id`, `parent_id`, `name`
 (10, NULL, 2, 0, 'Entertaiment', '/Manage/img/icon-system/entertaiment.png', 1, 0, 1),
 (11, NULL, 2, 0, 'Friends and Lover', '/Manage/img/icon-system/heart.png', 1, 0, 1),
 (12, NULL, 2, 0, 'Travel', '/Manage/img/icon-system/travel.png', 1, 0, 1),
-(55, 77, 1, 2, 'fwfwfw', '/Uploads/9/2015-08-03-12-08-03.jpg', 0, 1, 1),
-(56, 78, 1, 0, 'wfwfwfwfwfw', NULL, 0, 0, 1),
-(57, 77, 2, 0, 'fwfwfwf', NULL, 0, 1, 1),
-(58, 77, 2, 7, 'Bonus', '/Uploads/9/2015-08-03-15-08-03.png', 0, 0, 1),
-(59, 77, 2, 7, 'Sub Orther', '/Uploads/9/2015-08-03-14-08-06.png', 0, 1, 1);
+(60, 80, 2, 7, 'Shopping ', '/Uploads/9/2015-08-04-09-08-42.png', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -90,15 +86,7 @@ CREATE TABLE IF NOT EXISTS `tbl_category_default_delete` (
   `id` int(11) NOT NULL,
   `wallet_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `tbl_category_default_delete`
---
-
-INSERT INTO `tbl_category_default_delete` (`id`, `wallet_id`, `category_id`) VALUES
-(1, 77, 5),
-(2, 77, 12);
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -113,19 +101,23 @@ CREATE TABLE IF NOT EXISTS `tbl_transaction` (
   `wallet_id` int(11) NOT NULL,
   `amount` float NOT NULL,
   `note` text COLLATE utf8_unicode_ci,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
+  `created_at` date NOT NULL,
+  `updated_at` date DEFAULT NULL,
+  `deleted_at` date DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `tbl_transaction`
 --
 
 INSERT INTO `tbl_transaction` (`id`, `parent_transaction_id`, `category_id`, `wallet_id`, `amount`, `note`, `created_at`, `updated_at`, `deleted_at`, `status`) VALUES
-(17, 0, 3, 77, 5000000, 'Initial Balance', '2015-08-03 11:53:50', NULL, NULL, 0),
-(18, 0, 3, 78, 125333, 'Initial Balance', '2015-08-03 11:54:07', NULL, NULL, 0);
+(26, 0, 3, 80, 5500000, 'Initial Balance', '2015-08-04', NULL, NULL, 0),
+(27, 0, 8, 80, 20000, 'purchase card ', '2015-08-04', NULL, NULL, 1),
+(28, 0, 60, 80, 3000000, 'buy refrigerator', '2015-08-04', '2015-08-04', NULL, 0),
+(29, 0, 3, 81, 7000000, 'Initial Balance', '2015-08-04', NULL, NULL, 0),
+(30, 0, 9, 81, 200000, 'transport by motobike\r\n', '2015-08-04', NULL, NULL, 1),
+(32, 0, 12, 80, 1000000, 'Go to sam son', '2015-08-06', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -176,15 +168,15 @@ CREATE TABLE IF NOT EXISTS `tbl_wallet` (
   `updated_at` datetime NOT NULL,
   `deleted_at` datetime NOT NULL,
   `status` tinyint(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `tbl_wallet`
 --
 
 INSERT INTO `tbl_wallet` (`id`, `user_id`, `name`, `amount`, `is_default`, `created_at`, `updated_at`, `deleted_at`, `status`) VALUES
-(77, 9, 'Salary', 5000000, 1, '2015-08-03 11:08:50', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
-(78, 9, 'cocacola', 125333, 0, '2015-08-03 11:08:07', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);
+(80, 9, 'Salary This Month ', 1500000, 1, '2015-08-04 09:08:49', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
+(81, 9, 'My Wallet', 7000000, 0, '2015-08-04 11:08:38', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);
 
 --
 -- Indexes for dumped tables
@@ -239,17 +231,17 @@ ALTER TABLE `mst_catalog`
 -- AUTO_INCREMENT for table `tbl_category`
 --
 ALTER TABLE `tbl_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT for table `tbl_category_default_delete`
 --
 ALTER TABLE `tbl_category_default_delete`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `tbl_transaction`
 --
 ALTER TABLE `tbl_transaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `tbl_user`
 --
@@ -259,7 +251,7 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_wallet`
 --
 ALTER TABLE `tbl_wallet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=82;
 --
 -- Constraints for dumped tables
 --

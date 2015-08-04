@@ -30,14 +30,13 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5 id="title-balance"><b>Balance: <?= $this->Number->format($dataWallet->amount) ?></b>
-         <?= $this->Form->create(null)?> 
+         <?= $this->Form->create(null)?>              
                 <select id="change-date">
-                    <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'today'])?>">To day</option>
-                    <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'this-week']) ?>">This Week</option>
-                    <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'this-month']) ?>">This Month</option>
+                    <option value="<?= $this->Url->build(['controller'=>'Transaction','action'=>'query','wallet_id'=>$walletId,'query'=>'today'])?>">To day</option>
+                    <option value="<?= $this->Url->build(['controller'=>'Transaction','action'=>'query','wallet_id'=>$walletId,'query'=>'this-week']) ?>">This Week</option>
+                    <option value="<?= $this->Url->build(['controller'=>'Transaction','action'=>'query','wallet_id'=>$walletId,'query'=>'this-month']) ?>">This Month</option>
                 </select>
          <?= $this->Form->end() ?>
-
                  </h5>
                 <div class="ibox-tools">
                     <a class="collapse-link">
@@ -98,6 +97,15 @@
                 <div class="row">
                     <nav class="pull-right" id="nav-pagination">
                         <ul class="pagination">
+                            
+                            <?= $this->Paginator->options(array(
+                            'url' => array(
+                              '_name' => 'transaction_query',
+                                'wallet_id'=>$walletId,
+                                'query_date'=>$queryDate
+                            )
+                          )); ?>
+                            
                             <?= $this->Paginator->prev('« Previous') ?>
                             <?= $this->Paginator->numbers() ?>
                             <?= $this->Paginator->next('Next »') ?>

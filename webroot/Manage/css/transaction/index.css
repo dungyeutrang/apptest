@@ -1,0 +1,38 @@
+.ibox-title{
+    height: 55px !important;
+    padding: 10px 15px 7px;
+}
+#change-date{
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    height: 30px;
+    margin-left: 10px;
+    padding: 0px 15px;
+    color: rgba(62, 57, 57, 0.9);
+    text-align: center;
+}
+@media screen and (max-width: 400px) {
+    form{        
+        padding: 0px;
+        margin: 0px;
+        position: initial !important;
+    }
+    
+    .ibox-title{
+        height: 73px !important;
+    }
+    #change-date{
+        margin-left: 0px;
+        margin-top: 5px;
+    }
+
+}
+form{
+    height: 32px;
+    position: relative ;
+    left: 119px;
+    top: -18px;
+}

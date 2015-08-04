@@ -81,6 +81,13 @@ a.btn{
     margin-bottom: 10px;
 }
 img.avatar-category{
- width: 32px;   
- height: 32px;   
+    width: 32px;   
+    height: 32px;   
+}
+#title-balance{
+    color: orange;
+}
+.icon-category{
+    width: 32px;
+    height: 32px;
 }

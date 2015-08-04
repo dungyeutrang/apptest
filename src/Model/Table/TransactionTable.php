@@ -5,6 +5,7 @@ namespace App\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Table\MstCatalogTable;
 
 /**
  * Transaction Model
@@ -62,36 +63,89 @@ class TransactionTable extends Table
                 ->notEmpty('amount');
 
         $validator
-                ->allowEmpty('note');
+                ->add('category_id', 'valid', ['rule' => 'numeric'])
+                ->add('category_id', 'custom', ['rule' => function ($value) {
+                        $data = $this->Category->find()->where(['id' => $value])->first();
+                        if ($data) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }])->requirePresence('category_id', 'create');
 
-        $validator
-                ->add('created_at', 'valid', ['rule' => 'datetime'])
-                ->requirePresence('created_at', 'create')
-                ->notEmpty('created_at');
 
-        return $validator;
-    }
+                $validator
+                        ->allowEmpty('note');
 
-    public function getDataIndex($walletId)
-    {
-        $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
-                        ->andWhere(['DATE(Transaction.created_at)' => date('Y-m-d')])->andWhere(['Transaction.status' => 0]);
-        return $data;
-    }
+                $validator
+                        ->add('created_at', 'valid', ['rule' => 'date'])
+                        ->requirePresence('created_at', 'create')
+                        ->notEmpty('created_at');
 
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-//        $rules->add($rules->existsIn(['parent_transaction_id'], 'ParentTransactions'));
-        $rules->add($rules->existsIn(['category_id'], 'Category'));
-        $rules->add($rules->existsIn(['wallet_id'], 'Wallet'));
-        return $rules;
-    }        
+                return $validator;
+            }
 
-}
+            /**
+             *  get data index 
+             * @param type $walletId
+             * @return type
+             */
+            public function getDataIndex($walletId)
+            {
+                $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                        ->andWhere(['DATE(Transaction.created_at)' => date('Y-m-d')])
+                        ->andWhere(['Transaction.status' => 0])
+                        ->contain(['Wallet', 'Category', 'Category.MstCatalog']);
+                return $data;
+            }
+
+            public function getDataQuery($walletId, $type)
+            {
+                $date = new \DateTime('now');
+                if ($type == 1) {
+                    $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                            ->andWhere(['DATE(Transaction.created_at)' => date('Y-m-d')])
+                            ->andWhere(['Transaction.status' => 0])
+                            ->contain(['Wallet', 'Category', 'Category.MstCatalog']);
+                } else if ($type == 2) {
+//                var_dump($type);die;
+                     $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                        ->andWhere(['week(Transaction.created_at)' => $date->format('W')-1])    
+                        ->andWhere(['Transaction.status' => 0])
+                        ->contain(['Wallet', 'Category', 'Category.MstCatalog']);
+                } else {
+                    $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                        ->andWhere(['month(Transaction.created_at)' => date('m')])
+                        ->andWhere(['Transaction.status' => 0])
+                        ->contain(['Wallet', 'Category', 'Category.MstCatalog']);
+                }
+                return $data;
+            }
+
+            /**
+             * Returns a rules checker object that will be used for validating
+             * application integrity.
+             *
+             * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+             * @return \Cake\ORM\RulesChecker
+             */
+            public function buildRules(RulesChecker $rules)
+            {
+                $rules->add($rules->existsIn(['category_id'], 'Category'));
+                $rules->add($rules->existsIn(['wallet_id'], 'Wallet'));
+                return $rules;
+            }
+
+            /**
+             * return transaction
+             * @param type $id
+             */
+            public function getTransaction($id)
+            {
+                return $this->find()->where(['Transaction.id' => $id])
+                                ->contain(['Wallet', 'Category', 'Category.MstCatalog'])
+                                ->first();
+            }
+
+        }
+        
