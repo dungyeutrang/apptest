@@ -48,7 +48,9 @@
              <?php }else{ ?>
                 <li class="dropdown"><a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Hi!&nbsp;<?php echo $user['last_name'].$user['first_name'] ?> <span class="caret"></a>
                    <ul class="dropdown-menu">
-                   <li><a href="#">Manage</a></li>
+                   <li><?= $walletDefault?$this->HTML->link('Manage',['_name'=>'transaction','wallet_id'=>$walletDefault]):$this->HTML->link('Manage',['_name'=>'wallet_add']) ?></li>
+                   <li><?= $this->HTML->link('Update Profile',['_name'=>'update_profile']) ?></li>
+                   <li><?= $this->HTML->link('Change Password',['_name'=>'change_password']) ?></li>
                    <li><a href="<?php echo $this->Url->build('/logout',true) ?>">Logout</a></li>
                  </ul>
                 </li>

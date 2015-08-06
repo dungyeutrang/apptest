@@ -83,7 +83,7 @@ class WalletController extends AppController
                 if ($this->Wallet->save($wallet, ['associated' => ['transaction']])) {
                     $this->Wallet->connection()->commit();
                     $this->Flash->success(__(Configure::read('message.add_wallet_success')));
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['_name' => 'transaction','wallet_id'=>$wallet->id]);
                 } else {
                     $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
                 }
@@ -102,8 +102,9 @@ class WalletController extends AppController
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id)
+    public function edit()
     {
+        $id = $this->request->wallet_id;
         $wallet = $this->Wallet->checkExist($id);
         if (!$wallet) {
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
@@ -114,7 +115,7 @@ class WalletController extends AppController
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
             if ($this->Wallet->save($wallet)) {
                 $this->Flash->success(__(Configure::read('message.update_wallet_success')));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['_name' => 'transaction','wallet_id'=>$id]);
             } else {
                 $this->Flash->error(__(Configure::read('message.update_wallet_fail')));
             }
@@ -179,8 +180,7 @@ class WalletController extends AppController
             $dataJsIncome[$index]['label']=$dt->category->name;
             $dataJsIncome[$index]['data']=$dt->amount;
         }
-        $dataIncome =  json_encode($dataJsIncome);
-        
+        $dataIncome =  json_encode($dataJsIncome);        
         $this->set('dataExpense',$dataExpense);
         $this->set('dataIncome',$dataIncome);
         $this->set('balance',$balance);

@@ -41,6 +41,7 @@ class AppController extends Controller
         parent::initialize();
         $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
+        $this->loadModel('Wallet');
         $this->loadComponent("csrf");
         $this->loadComponent('Auth', [
             'loginAction' => [
@@ -65,6 +66,9 @@ class AppController extends Controller
             ]
         ]);
         $this->set('user',$this->Auth->user());
+        if($this->Auth->user()){
+        $this->set('walletDefault',$this->Wallet->getWalletDefault($this->Auth->user('id')));            
+        }
     }
 
 }

@@ -19,7 +19,7 @@ class TransactionController extends AppController
         $this->loadModel('Category');
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
-        $this->loadModel('Wallet');
+        $this->loadModel('Wallet'); 
     }
 
     /**
@@ -211,6 +211,8 @@ class TransactionController extends AppController
             $tblCatalog = $this->Category->getMstCatalog();
             $this->set(compact('transaction', 'tblCategory', 'tblCatalog', 'walletId'));
             $this->set('_serialize', ['transaction']);
+            $this->set('wallet_id',$transaction->wallet_id);
+            $this->set('wallet_name',$this->Wallet->getWalletName($transaction->wallet_id));
         }
     }
 

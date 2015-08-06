@@ -67,10 +67,12 @@ class TblUserTable extends Table
 
         $validator
                 ->requirePresence('last_name', 'create')
+                ->requirePresence('last_name', 'update')
                 ->notEmpty('last_name');
 
         $validator
                 ->requirePresence('first_name', 'create')
+                ->requirePresence('first_name', 'update')
                 ->notEmpty('first_name');
 
         $validator

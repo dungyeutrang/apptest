@@ -20,11 +20,22 @@
                     IN+
                 </div>
             </li>
-                    <li class="active"><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label">Wallet</span>', ['_name' => 'wallet'],array("escape"=>false)) ?></li> 
-                    <li class=""><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label">Debt</span>', ['_name' => 'wallet'],array("escape"=>false)) ?></li>
-                    <li class=""><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label">Event</span>', ['_name' => 'wallet'],array("escape"=>false)) ?></li> 
-                    <li class=""><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label">Budget</span>', ['_name' => 'wallet'],array("escape"=>false)) ?></li>  
-                    <li class=""><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label">Saving</span>', ['_name' => 'wallet'],array("escape"=>false)) ?></li>         
+          <?php if($wallet_id){?> 
+                      <li class="active"><?= $this->HTML->link('<i class="fa fa-th-large"></i><span class="nav-label"></span>'.$wallet_name, ['_name' => 'transaction','wallet_id'=>$wallet_id],array("escape"=>false)) ?> 
+                        <ul class="nav nav-second-level">                     
+                             <li><?= $this->HTML->link('Update',['_name'=>'wallet_edit','wallet_id'=>$wallet_id]) ?></li>
+                             <li><?= $this->HTML->link('Delete',['_name'=>'wallet_delete','wallet_id'=>$wallet_id]) ?></li>  
+                        </ul>
+                      </li>
+        <li><?= $this->HTML->link('Transaction',['_name'=>'transaction','wallet_id'=>$wallet_id]) ?></li>
+        <li><?= $this->HTML->link('Category',['_name'=>'category','wallet_id'=>$wallet_id]) ?></li>           
+        <li><?= $this->HTML->link('Status',['_name'=>'wallet_expense','wallet_id'=>$wallet_id]) ?></li>           
+          <?php }else{
+                    foreach($listWallet as $w): ?>
+                    <li><?= $this->HTML->link('<i class="fa fa-th-large"></i><span></span> &nbsp; '.$w->name ,['_name'=>'transaction','wallet_id'=>$w->id],array('escape'=>false)) ?></li>
+                    <li class="divider"></li>
+                <?php endforeach;?>      
+          <?php }?>     
         </ul>
     </div>
 </nav>

@@ -65,51 +65,38 @@
                     </li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
-                </a>
+            
+           <li class="dropdown">
+             <?php
+               if($wallet_id){ ?>
+                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                  <?= $wallet_name ?></span>
+                </a>       
+               <?php }else{ ?>
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                    <i class="fa fa-google-wallet"></i> <span class="label label-primary" ></span>
+               <?php } ?>                  
                 <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                        <a href="mailbox.html">
-                            <div>
-                                <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
+
+               <?php
+               if($wallet_id){
+             foreach($listWallet as $w): ?>
+             <?php if($w->id != $wallet_id): ?>
+                   <li><?= $this->HTML->link('<i class="fa fa-th-large"></i><span></span> &nbsp; '.$w->name ,['_name'=>'transaction','wallet_id'=>$w->id],array('escape'=>false)) ?></li>
                     <li class="divider"></li>
-                    <li>
-                        <a href="profile.html">
-                            <div>
-                                <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                <span class="pull-right text-muted small">12 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
+               <?php endif; ?>
+              <?php endforeach; ?>
+                <?php }else{
+                    foreach($listWallet as $w): ?>
+                    <li><?= $this->HTML->link('<i class="fa fa-th-large"></i><span></span> &nbsp; '.$w->name ,['_name'=>'transaction','wallet_id'=>$w->id],array('escape'=>false)) ?></li>
                     <li class="divider"></li>
-                    <li>
-                        <a href="grid_options.html">
-                            <div>
-                                <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                <span class="pull-right text-muted small">4 minutes ago</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <div class="text-center link-block">
-                            <a href="notifications.html">
-                                <strong>See All Alerts</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </li>
+                <?php endforeach;?>
+                <?php } ?>
+                    <li><?= $this->HTML->link('<i class="fa fa-plus"></i><span></span>&nbsp; Add new wallet',['_name'=>'wallet_add'],array('escape'=>false)) ?></li>
                 </ul>
             </li>
             <li>
-                <?= $this->HTML->link('<i class="fa fa-sign-out"></i> Log out', ['_name' => 'logout'], array('escape' => false)) ?>
-            </li>
+            </li>          
         </ul>
     </nav>
 </div>

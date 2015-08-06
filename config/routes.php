@@ -54,6 +54,8 @@ Router::scope('/', function ($routes) {
     $routes->connect('/login', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'login'], ['_name' => 'login']);
     $routes->connect('/loginHome', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'loginHome']);
     $routes->connect('/logout', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'logout'], ['_name' => 'logout']);
+    $routes->connect('/update-profile', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'updateProfile'], ['_name' => 'update_profile']);
+    $routes->connect('/change-password', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'changePassword'], ['_name' => 'change_password']);
     $routes->connect('/forgetpassword', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'forgetPassword']);
     $routes->connect('/resetpassword/:token', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'resetPassword']);
     $routes->connect('/active/:token', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'activeUser']);
@@ -63,8 +65,8 @@ Router::scope('/', function ($routes) {
         // manage wallet
         $routes->connect('/wallet/index', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet']);
         $routes->connect('/wallet/add-wallet', ['controller' => 'Wallet', 'action' => 'add'], ['_name' => 'wallet_add']);
-        $routes->connect('/wallet/edit-wallet/:id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
-        $routes->connect('/wallet/delete/:id', ['controller' => 'Wallet', 'action' => 'delete'], ['_name' => 'wallet_delete', 'id' => '\d+']);
+        $routes->connect('/wallet/edit-wallet/:wallet_id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
+        $routes->connect('/wallet/delete/:wallet_id', ['controller' => 'Wallet', 'action' => 'delete'], ['_name' => 'wallet_delete', 'id' => '\d+']);
         $routes->connect('/wallet/expense/:wallet_id', ['controller' => 'Wallet', 'action' => 'expense'], ['_name' => 'wallet_expense','wallet_id'=>'\d+']);
         
         // manage category

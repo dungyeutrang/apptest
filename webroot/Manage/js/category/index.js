@@ -1,4 +1,21 @@
 $(function () {
+
+    $('.dataTables-content').dataTable({
+        responsive: true,
+        bPaginate: false,
+        bInfo: false,
+        aoColumnDefs: [
+            {bSortable: false, aTargets: [4]},
+            {bSortable: false, aTargets: [5]}
+        ],
+        LengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        iDisplayLength: 10,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/Manage/js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+        }
+    });
+
     //config spinner 
     var opts = {
         lines: 13 // The number of lines to draw

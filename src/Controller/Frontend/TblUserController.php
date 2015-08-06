@@ -51,12 +51,12 @@ class TblUserController extends AppController
      * @return type
      */
     public function login()
-    {        
+    {
         if ($this->request->is("post")) {
             $user = $this->Auth->identify();
             if ($user && $user['is_active'] == 1) {
                 $this->Auth->setUser($user);
-                return $this->redirect(['prefix'=>'manage','controller' => 'Home', 'action' => 'index']);
+                return $this->redirect(['prefix' => 'manage', 'controller' => 'Home', 'action' => 'index']);
             } else if ($user && $user['is_active'] != 1) {
                 $this->Flash->error(__(Configure::read('message.error_active')));
             } else {
@@ -161,22 +161,36 @@ class TblUserController extends AppController
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function updateProfile()
     {
-        $tblUser = $this->TblUser->get($id, [
-            'contain' => []
-        ]);
+        $tblUser = $this->TblUser->get($this->Auth->user('id'));
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tblUser = $this->TblUser->patchEntity($tblUser, $this->request->data);
             if ($this->TblUser->save($tblUser)) {
-                return $this->redirect(['action' => 'index']);
+                $this->request->session()->write('Auth.User', array_merge($this->Auth->user(), $this->request->data));
+                return $this->redirect('/');
             } else {
                 $this->Flash->error(__('The tbl user could not be saved. Please, try again.'));
             }
         }
-        $lastWallets = $this->TblUser->LastWallets->find('list', ['limit' => 200]);
-        $this->set(compact('tblUser', 'lastWallets'));
+        $this->set(compact('tblUser'));
         $this->set('_serialize', ['tblUser']);
+    }
+
+    public function changePassword()
+    {
+        $data = $this->TblUser->get($this->Auth->user('id'));
+         $errors = array();
+        if ($this->request->is("post")) {
+            $validator = $this->TblUser->validatorResetPassword();
+            $errors = $validator->errors($this->request->data);
+            if (empty($errors)) {
+                $data->password = $this->request->data('password');
+                $this->TblUser->updateEntity($this->TblUser, $data);
+                $this->redirect('/');
+            }
+        }
+        $this->set('errors', $errors);
     }
 
 }

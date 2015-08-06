@@ -67,7 +67,7 @@
                             <th><?= $this->Paginator->sort('type') ?></th>
                             <th><?= $this->Paginator->sort('amount') ?></th>
                             <th><?= $this->Paginator->sort('date') ?></th>
-                            <th><?= $this->Paginator->sort('note') ?></th>
+                            <th><?= h('note') ?></th>
                             <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                     </thead>

@@ -17,6 +17,7 @@ class AppController extends Controller
         $this->layout = "Manage/index";
         $this->loadComponent("csrf");
         $this->loadComponent('Flash');
+        $this->loadModel('Wallet');
         $this->loadComponent('Auth', [
             'loginAction' => [
                 '_name' => 'login'
@@ -37,6 +38,12 @@ class AppController extends Controller
                 'home'
             ]
         ]);
+//        var_dump(count($this->Wallet->getWallet($this->Auth->user('id'))));die;
+        $this->set('listWallet',$this->Wallet->getWallet($this->Auth->user('id')));
+        $this->set('wallet_id',$this->request->wallet_id);
+        if($this->request->wallet_id){            
+        $this->set('wallet_name',$this->Wallet->getWalletName($this->request->wallet_id));
+        }
     }
 
 }

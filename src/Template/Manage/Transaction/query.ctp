@@ -129,4 +129,4 @@
 <?= $this->element('Manage/data_table_js') ?>
 <?= $this->HTML->script('../Manage/js/common/datatable_all_page', array('block' => 'scriptBottom')) ?> 
 <?= $this->HTML->script('../Manage/js/transaction/transaction_index', array('block' => 'scriptBottom')) ?>
-<?= $this->HTML->script('../Manage/js/transaction/spin.min', array('block' => 'scriptBottom')) ?> 
+<?= $this->HTML->script('../Manage/js/transaction/spin.min', array('block' => 'scriptBottom')) ?>

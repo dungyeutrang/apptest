@@ -147,4 +147,34 @@ class WalletTable extends Table
         return  $this->find()->where(['id'=>$walletId])->first()->amount;
         
     }
+    
+    /**
+     * get wallet default
+     * @param type $userId
+     */
+    public function getWalletDefault($userId)
+    {        
+        return $this->find()->where(['user_id'=>$userId,'is_default'=>1,'status'=>0])->first()->id;
+    }
+    
+    /**
+     * get wallet by user id
+     */    
+    public function getWallet($userId)
+    {        
+         return $this->find()->where(['user_id'=>$userId,'status'=>0])->toArray();
+    }
+    
+    /**
+     * get walletName
+     * @param type $id
+     * @return type
+     */
+    public function getWalletName($id)
+    {
+        return $this->find()->where(['id'=>$id])->first()->name ;
+        
+    }
+    
+    
 }

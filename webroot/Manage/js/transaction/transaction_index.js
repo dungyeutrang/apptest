@@ -1,4 +1,21 @@
 $(function () {
+
+    $('.dataTables-content').dataTable({
+        responsive: true,
+        bPaginate: false,
+        bInfo: false,
+        aoColumnDefs: [
+            {bSortable: false, aTargets: [6]},
+            {bSortable: false, aTargets: [7]}
+        ],
+        LengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        iDisplayLength: 10,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "/Manage/js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+        }
+    });
+    
     var opts = {
         lines: 13 // The number of lines to draw
         , length: 28 // The length of each line
@@ -31,28 +48,28 @@ $(function () {
             type: "POST",
             data: {_csrfToken: token},
             beforeSend: function (xhr) {
-                 spinner = new Spinner(opts).spin(target);
-                $('body').css('opacity',0.8);
+                spinner = new Spinner(opts).spin(target);
+                $('body').css('opacity', 0.8);
             },
             success: function (data) {
                 $('#ibox-content').empty();
                 $('#ibox-content').html(data);
                 spinner.stop();
-                $('body').css('opacity',1);
+                $('body').css('opacity', 1);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert("Server not response !");
-                 spinner.stop();
-                $('body').css('opacity',1);
+                spinner.stop();
+                $('body').css('opacity', 1);
             },
             dataType: 'html'
 
         });
     });
-    
-     $('a.btn-delete').each(function (index, e) {
+
+    $('a.btn-delete').each(function (index, e) {
         $(e).click(function (event) {
-             event.preventDefault();
+            event.preventDefault();
             urlDelete = $(e).attr('href');
             $('#deleteModal').modal('show');
             $('#btn-delete').click(function () {

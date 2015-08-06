@@ -22,7 +22,7 @@ class CategoryController extends AppController
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
         $this->loadModel('Transaction');
-        $this->upload = new UploadFile();
+        $this->upload = new UploadFile();        
     }
 
     /**

@@ -68,7 +68,7 @@
                                     <?= h($walletName) ?>
                                 </td>
                                 <td class="col-sm-2">
-                                    <?= $category->has('mst_catalog') ? $this->Html->link($category->mst_catalog->name, ['controller' => 'MstCatalog', 'action' => 'view', $category->mst_catalog->id]) : '' ?>
+                                    <?= $category->mst_catalog->name ?>
                                 </td>
                                 <td class="col-sm-3"><?= h($category->name) ?></td>
                                 <td class="col-sm-1"><?= $this->HTML->image($category->avatar,array('class'=>'img-circle avatar-category')) ?></td>
