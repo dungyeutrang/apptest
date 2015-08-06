@@ -21,6 +21,7 @@ class CategoryController extends AppController
         $this->loadModel('Wallet');
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
+        $this->loadModel('Transaction');
         $this->upload = new UploadFile();
     }
 
@@ -166,7 +167,7 @@ class CategoryController extends AppController
         $category = $this->Category->checkExist($id);
         if (!$category) {
             $this->Flash->error(__(Configure::read('message.category_not_found')));
-            $this->redirect(['_name' => 'category']);
+            return $this->redirect(['_name' => 'category']);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $avatarOld = $category->avatar;
@@ -210,11 +211,44 @@ class CategoryController extends AppController
         $id = $this->request->id;
         $walletId = $this->request->wallet_id;
         $dataWallet = $this->Wallet->checkExist($walletId);
+        $category = $this->Category->checkExist($id);
+        // delete by merge
+        if ($this->request->is('ajax')) {
+            $idMerge = $this->request->data['id'];
+            $categoryMerge = $this->Category->checkExist($id);
+            $response = array();
+            if (is_null($dataWallet) || is_null($category) || is_null($categoryMerge)) {
+                $response['code'] = 1;
+            } else {
+                $this->Transaction->connection()->begin();
+                try {
+                    if ($category->is_default == 1 && $category->is_perform == 1) {
+                        $this->Transaction->mergeTransaction($walletId, $id, $idMerge);
+                        $this->CategoryDelete->add($walletId, $category->id);
+                        $response['code'] = 2;
+                        $this->Transaction->connection()->commit();
+                    } else if ($category->is_default == 1 && $category->is_perform == 0) {
+                        $response['code'] = 3;
+                    } else {
+                        $this->Transaction->mergeTransaction($walletId, $id, $idMerge);
+                        $category->status = 1;
+                        $this->Category->save($category);
+                        $response['code'] = 2;
+                        $this->Transaction->connection()->commit();
+                    }
+                } catch (Exception $ex) {
+                    $this->Transaction->connection()->rollback();
+                    $response['code'] = 4;
+                }
+            }
+            echo json_encode($response);
+            die();
+        }
         if (is_null($dataWallet)) {
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
-            $this->redirect(['_name' => 'wallet']);
+            return $this->redirect(['_name' => 'wallet']);
         }
-        $category = $this->Category->checkExist($id);
+
         if (!$category) {
             $this->Flash->error(__(Configure::read('message.category_not_found')));
             $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
@@ -241,9 +275,57 @@ class CategoryController extends AppController
                 }
             }
         } else {
-            $this->Flash->error(__(Configure::read('message.delete_category_constraint')));
+//            $this->Flash->error(__(Configure::read('message.delete_category_constraint')));
+            $this->Transaction->connection()->begin();
+            try {
+                $this->Transaction->deleteTransaction($walletId, $category->id);
+                if ($category->is_default == 1 && $category->is_perform == 1) {
+                    $this->CategoryDelete->add($walletId, $category->id);
+                } else if ($category->is_default == 1 && $category->is_perform == 0) {
+                    $this->Flash->error(__(Configure::read('message.category_default')));
+                } else {
+                    $category->status = 1;
+                    $this->Category->save($category);
+                }
+                $this->Transaction->connection()->commit();
+                $this->Flash->success(__(Configure::read('message.delete_category_success')));
+            } catch (Exception $ex) {
+                $this->Transaction->connection()->rollback();
+                $this->Flash->error(__(Configure::read('message.delete_category_fail')));
+            }
         }
-        $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+        return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+    }
+
+    /**
+     * check delete data
+     */
+    public function check()
+    {
+        if ($this->request->is('ajax')) {
+            $response = array();
+            $walletId = $this->request->wallet_id;
+            $id = $this->request->id;
+            $dataWallet = $this->Wallet->checkExist($walletId);
+            $category = $this->Category->checkExist($id);
+            if (is_null($dataWallet || is_null($category))) {
+                $response['code'] = 1;
+                echo json_encode($response);
+                die;
+            }
+            // end if  
+            $response['code'] = 2;
+            $transaction = $this->Category->getTransaction($walletId, $id)->toArray();
+            if (count($transaction) == 0) {
+                $response['check'] = 1;
+            } else {
+                $response['check'] = 2;
+            }
+            echo json_encode($response);
+            die();
+        } else {
+            return $this->redirect(['_name' => 'wallet']);
+        }
     }
 
 }

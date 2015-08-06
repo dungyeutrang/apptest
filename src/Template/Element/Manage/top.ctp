@@ -20,7 +20,7 @@
                     <li>
                         <div class="dropdown-messages-box">
                             <a href="profile.html" class="pull-left">
-                                <?= $this->HTML->image('/Manage/img/layout/a7.jpg',array('class'=>'img-circle')) ?>
+                                <?= $this->HTML->image('/Manage/img/layout/a7.jpg', array('class' => 'img-circle')) ?>
                             </a>
                             <div class="media-body">
                                 <small class="pull-right">46h ago</small>
@@ -33,7 +33,7 @@
                     <li>
                         <div class="dropdown-messages-box">
                             <a href="profile.html" class="pull-left">
-                                <?= $this->HTML->image('/Manage/img/layout/a4.jpg',array('class'=>'img-circle')) ?>
+                                <?= $this->HTML->image('/Manage/img/layout/a4.jpg', array('class' => 'img-circle')) ?>
                             </a>
                             <div class="media-body ">
                                 <small class="pull-right text-navy">5h ago</small>
@@ -46,7 +46,7 @@
                     <li>
                         <div class="dropdown-messages-box">
                             <a href="profile.html" class="pull-left">
-                                <?= $this->HTML->image('/Manage/img/layout/profile.jpg',array('class'=>'img-circle')) ?>
+                                <?= $this->HTML->image('/Manage/img/layout/profile.jpg', array('class' => 'img-circle')) ?>
                             </a>
                             <div class="media-body ">
                                 <small class="pull-right">23h ago</small>
@@ -107,12 +107,9 @@
                     </li>
                 </ul>
             </li>
-
-
             <li>
-                <?= $this->HTML->link('<i class="fa fa-sign-out"></i> Log out',['_name'=>'logout'],array('escape' => false)) ?>
+                <?= $this->HTML->link('<i class="fa fa-sign-out"></i> Log out', ['_name' => 'logout'], array('escape' => false)) ?>
             </li>
         </ul>
-
     </nav>
 </div>

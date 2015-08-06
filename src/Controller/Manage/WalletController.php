@@ -18,6 +18,8 @@ class WalletController extends AppController
     public function initialize()
     {
         parent::initialize();
+        $this->loadModel('Category');
+        $this->loadModel('Transaction');
     }
 
     /**
@@ -30,7 +32,7 @@ class WalletController extends AppController
         $this->paginate = [
             'contain' => ['TblUser']
         ];
-        $this->set('wallet', $this->paginate($this->Wallet->find()->where(['user_id' => $this->Auth->user('id')])));
+        $this->set('wallet', $this->paginate($this->Wallet->find()->where(['status' => 0, 'user_id' => $this->Auth->user('id')])));
         $this->set('_serialize', ['wallet']);
     }
 
@@ -56,7 +58,7 @@ class WalletController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function add()
-    {  
+    {
         $wallet = $this->Wallet->newEntity();
         if ($this->request->is('post')) {
             $wallet->user_id = $this->Auth->user('id');
@@ -64,32 +66,31 @@ class WalletController extends AppController
             if ($this->Wallet->checkWalletDefault($this->Wallet, $this->Auth->user('id'))) {
                 $wallet->is_default = 1;
             }
-            $amount =  str_replace('.', '',$this->request->data['amount']);                       
-            if ($this->request->data('amount')){
+            $amount = str_replace('.', '', $this->request->data['amount']);
+            if ($this->request->data('amount')) {
                 $data = [
                     'category_id' => 3, // default when add new wallet
                     'note' => Configure::read('message.add_transaction_wallet_new'),
-                    'amount' => $amount,
+                    'amount' => floatval($amount),
                     'created_at' => new DateTime('now')
                 ];
                 $this->request->data['transaction'] = [$data];
             }
-            $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
-            $wallet->amount=$amount;
+            $wallet = $this->Wallet->patchEntity($wallet, $this->request->data, ['amount']);
+            $wallet->amount = floatval($amount);
             $this->Wallet->connection()->begin();
             try {
-                if($this->Wallet->save($wallet, ['associated' => ['Transaction']])){                    
-                $this->Wallet->connection()->commit();
-                $this->Flash->success(__(Configure::read('message.add_wallet_success')));
-                return $this->redirect(['action' => 'index']);
-                }else{                    
-                $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
-                }                
+                if ($this->Wallet->save($wallet, ['associated' => ['transaction']])) {
+                    $this->Wallet->connection()->commit();
+                    $this->Flash->success(__(Configure::read('message.add_wallet_success')));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
+                }
             } catch (Exception $ex) {
                 $this->Wallet->connection()->rollback();
             }
         }
-//        $tblUser = $this->Wallet->TblUser->find('list', ['limit' => 200]);
         $this->set(compact('wallet'));
         $this->set('_serialize', ['wallet']);
     }
@@ -130,16 +131,59 @@ class WalletController extends AppController
      * @return void Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete()
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $wallet = $this->Wallet->get($id);
-        if ($this->Wallet->delete($wallet)) {
-            $this->Flash->success(__('The wallet has been deleted.'));
-        } else {
-            $this->Flash->error(__('The wallet could not be deleted. Please, try again.'));
+        $id = $this->request->id;
+        $wallet = $this->Wallet->checkExist($id);
+        if (!$wallet) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            return $this->redirect(['action' => 'index']);
+        }
+        $this->Wallet->connection()->begin();
+        try {
+            $this->Category->deleteCategory($id);
+            $this->Wallet->deleteWallet($id);
+            $this->Transaction->deleteAllTransaction($id);
+            $this->Wallet->connection()->commit();
+            $this->Flash->success(__(Configure::read('message.delete_wallet_success')));
+        } catch (Exception $ex) {
+            $this->Wallet->connection()->rollback();
+            $this->Flash->error(__(Configure::read('message.delete_wallet_fail')));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     *  show status of wallet
+     * @return type
+     */
+    public function expense()
+    {
+        $id = $this->request->wallet_id;
+        $wallet = $this->Wallet->checkExist($id);
+        if (!$wallet) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            return $this->redirect(['action' => 'index']);
+        }
+        $dataExpense = $this->Wallet->getExpense($id);
+        $dataIncome = $this->Wallet->getIncome($id);
+        $balance =$this->Wallet->getAmount($id);
+        $dataJsExpense =array();
+        $dataJsIncome =array();
+        foreach($dataExpense as $index=>$dt){
+            $dataJsExpense[$index]['label']=$dt->category->name;
+            $dataJsExpense[$index]['data']=$dt->amount;
+        }
+        $dataExpense=  json_encode($dataJsExpense);
+        foreach($dataIncome as $index=>$dt){
+            $dataJsIncome[$index]['label']=$dt->category->name;
+            $dataJsIncome[$index]['data']=$dt->amount;
+        }
+        $dataIncome =  json_encode($dataJsIncome);
+        
+        $this->set('dataExpense',$dataExpense);
+        $this->set('dataIncome',$dataIncome);
+        $this->set('balance',$balance);
     }
 
 }

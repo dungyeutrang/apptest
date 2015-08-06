@@ -1,4 +1,4 @@
-<?= $this->HTML->css('/Manage/css/datatable_all_page', ['block' => 'css_header']) ?>
+<?= $this->HTML->css('/Manage/css/common/datatable_all_page', ['block' => 'css_header']) ?>
 <!-- Data table CSS -->
 <?= $this->element('Manage/data_table_css') ?>
 <div class="row wrapper border-bottom white-bg page-heading" id="head-title">
@@ -50,11 +50,12 @@
                     <thead>
                         <tr>
                             <th class="col-sm-1 text-center"><?= $this->Paginator->sort('id') ?></th>
-                            <th class="col-sm-2 text-center"><?= $this->Paginator->sort('name') ?></th>
+                            <th class="col-sm-1 text-center"><?= $this->Paginator->sort('name') ?></th>
                             <th class="col-sm-2 text-center"><?= $this->Paginator->sort('amount') ?></th>
                             <th class="col-sm-2 text-center"><?= $this->Paginator->sort('Category') ?></th>
+                            <th class="col-sm-2 text-center"><?= $this->Paginator->sort('Status') ?></th>
                             <th class="col-sm-2 text-center"><?= $this->Paginator->sort('Transaction') ?></th>
-                            <th class="col-sm-3 text-center"><?= __('Actions') ?></th>
+                            <th class="col-sm-2 text-center"><?= __('Actions') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,10 +67,11 @@
                                 <td class="text-center"><?= h($wallet->name) ?></td>
                                 <td class="text-center"><?=  preg_replace('/\B(?=(\d{3})+(?!\d))/', '.', $wallet->amount) ?></td>
                                 <td class="text-center"><?= $this->HTML->link('View',['_name'=>'category','wallet_id'=>$wallet->id],array('class'=>'btn btn-info')) ?></td>
+                                <td class="text-center"><?= $this->HTML->link('Show',['_name'=>'wallet_expense','wallet_id'=>$wallet->id],array('class'=>'btn btn-info')) ?></td>
                                 <td class="text-center"><?= $this->HTML->link('View',['_name'=>'transaction','wallet_id'=>$wallet->id],array('class'=>'btn btn-info')) ?></td>
                                 <td class="text-center">
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $wallet->id],array('class'=>'btn btn-warning')) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $wallet->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete this record ?', $wallet->id)]) ?>
+                                    <?= $this->Html->link(__('Delete'), ['action' => 'delete', $wallet->id],array('class'=>'btn btn-danger btn-delete')) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -89,14 +91,32 @@
                             ])
                             ?></p>
                     </nav>
-
                 </div>
             </div> <!-- end ibox content -->
         </div>
     </div>
 </div>
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Category</h4>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to delete this wallet ? 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="btn-delete" type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->
 <?= $this->element('Manage/data_table_js') ?>
-<?= $this->HTML->script('../Manage/js/datatable_all_page', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/common/datatable_all_page', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/wallet/index', array('block' => 'scriptBottom')) ?>

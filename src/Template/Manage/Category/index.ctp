@@ -1,7 +1,6 @@
-<?= $this->HTML->css('/Manage/css/datatable_all_page', ['block' => 'css_header']) ?>
+<?= $this->HTML->css('/Manage/css/common/datatable_all_page', ['block' => 'css_header']) ?>
 <!-- Data table CSS -->
 <?= $this->element('Manage/data_table_css') ?>
-
 <div class="row wrapper border-bottom white-bg page-heading" id="head-title">
     <div class="col-lg-10">
         <h2>Manage Category</h2>
@@ -23,10 +22,8 @@
     <div class="col-lg-2">
     </div>
 </div>
-
 <!-- message success -->
 <?= $this->Flash->render(); ?>
-
 <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
@@ -72,12 +69,14 @@
                                 </td>
                                 <td class="col-sm-2">
                                     <?= $category->has('mst_catalog') ? $this->Html->link($category->mst_catalog->name, ['controller' => 'MstCatalog', 'action' => 'view', $category->mst_catalog->id]) : '' ?>
-                                </td>                                
+                                </td>
                                 <td class="col-sm-3"><?= h($category->name) ?></td>
                                 <td class="col-sm-1"><?= $this->HTML->image($category->avatar,array('class'=>'img-circle avatar-category')) ?></td>
                                 <td class="actions col-sm-2">
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $category->id],array('class'=>'btn btn-warning')) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete','wallet_id'=>$walletId, 'id'=>$category->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $category->id)]) ?>
+                                    <?= $this->Html->link(__('Delete'), ['_name' => 'category_delete','wallet_id'=>$walletId, 'id'=>$category->id],
+                                    array('class'=>'btn btn-danger btn-delete','catalog'=>$category->catalog_id,'urlcheck'=>$this->Url->build(['_name'=>'category_check'
+                                    ,'wallet_id'=>$walletId,'id'=>$category->id]) )) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -102,8 +101,59 @@
         </div>
     </div>
 </div>
+<!-- Modal Delete Merg -->
+<div class="modal fade" id="deleteMergeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete category</h4>
+      </div>
+      <div class="modal-body">
+        <p id="content-title">
+        This category contain transaction.If you want to delete it,you may click button merge to merge with category difference</br>
+        or Click  button delete to delete all transaction !
+        </p>
+       <div url="<?= $this->Url->build(['_name'=>'transaction_get_data','wallet_id'=>$walletId]) ?>" id="form-delete" style="display:none">
+                    <?= $this->Form->create(null,array('class'=>'form-horizontal')) ?>                                        
+                    <?=  $this->Form->input('category_id', ['label'=>'Category','options' =>[],'class'=>'form-control']); ?> 
+                    <?= $this->Form->end() ?>  
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="btn-delete-merge" type="button" class="btn btn-primary">Merge</button>
+        <button id="btn-delete-all" type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Category</h4>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to delete this category ? 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="btn-delete" type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- LOADING -->
+<div  id="loading">
+</div>
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->
 <?= $this->element('Manage/data_table_js') ?>
-<?= $this->HTML->script('../Manage/js/datatable_all_page', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/common/datatable_all_page', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/category/index', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('../Manage/js/transaction/spin.min', array('block' => 'scriptBottom')) ?> 
+<?= $this->end(); ?>

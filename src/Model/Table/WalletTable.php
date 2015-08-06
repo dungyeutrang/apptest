@@ -96,7 +96,55 @@ class WalletTable extends Table
     {
         return $this->find()->where(['id' => $id])->first();
     }
-    
-    
 
+    /**
+     * delete wallet
+     * @param type $id
+     * @return type
+     */
+    public function deleteWallet($id)
+    {
+        return $this->updateAll(['status' => 1], ['id' => $id]);
+    }
+
+   /**
+    * get expense
+    * @param type $walletId
+    * @return type
+    */
+    public function getExpense($walletId)
+    {
+        return $this->Transaction->find()
+                ->where(['Transaction.wallet_id'=>$walletId,'Transaction.status'=>0])
+                ->contain(['Category'=>function($q){
+                    return $q->select(['name'])->where(['catalog_id'=>2]);
+                }])->select(['Transaction.amount','Category.name'])
+                ->toArray();
+    }
+    
+    /**
+     * get income of wallet
+     * @param type $walletId
+     * @return type
+     */
+    public function getIncome($walletId)
+    {
+        return $this->Transaction->find()
+                ->where(['Transaction.wallet_id'=>$walletId,'Transaction.status'=>0])
+                ->contain(['Category'=>function($q){
+                    return $q->where(['catalog_id'=>1]);
+                }])
+                ->toArray();
+    }
+    
+    /**
+     *  get amount of wallet
+     * @param type $walletId
+     * @return type
+     */
+    public function getAmount($walletId)
+    {
+        return  $this->find()->where(['id'=>$walletId])->first()->amount;
+        
+    }
 }

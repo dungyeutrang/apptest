@@ -65,6 +65,9 @@ class TblUserController extends AppController
         }
     }
 
+    /**
+     * active user 
+     */
     public function activeUser()
     {
         $token = $this->request->token;

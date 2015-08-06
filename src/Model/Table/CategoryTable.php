@@ -349,6 +349,15 @@ class CategoryTable extends Table
                 
                 return $this->find()->select(['catalog_id'])->where(['id'=>$id])->first()->catalog_id;
             }
+            
+            /**
+             *  delete category
+             * @param type $walletId
+             * @return type
+             */
+            public function deleteCategory($walletId){
+                return $this->updateAll(['status'=>1], ['wallet_id'=>$walletId]);
+            }
 
         }
         

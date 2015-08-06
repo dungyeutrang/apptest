@@ -28,7 +28,7 @@
             <td><?= $transaction->note ?></td>
             <td class="actions">
              <?= $this->Html->link(__('Edit'), ['action' => 'edit',$transaction->id],array('class'=>'btn btn-warning')) ?>
-             <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $transaction->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $transaction->id)]) ?>
+             <?= $this->Html->link(__('Delete'), ['action' => 'delete',$transaction->id],array('class'=>'btn btn-danger')) ?>
             </td>
         </tr>
     <?php endforeach; ?>

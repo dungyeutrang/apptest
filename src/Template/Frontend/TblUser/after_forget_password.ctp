@@ -8,6 +8,6 @@
 <div class="text-center">
     <p id="notice">We've sent an email to </br> <b><?php echo $email ?></b> with instructions to <br/> reset your password.</p>
 </div>
-        <a href="<?= $this->Url->build('/login') ?>"><button id="back-login" class="btn btn-danger center-block"><b>GO BACK TO LOGIN</b></button></a>
+   <a href="<?= $this->Url->build('/login') ?>"><button id="back-login" class="btn btn-danger center-block"><b>GO BACK TO LOGIN</b></button></a>
 </div>
 </div>

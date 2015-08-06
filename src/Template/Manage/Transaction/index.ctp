@@ -1,4 +1,4 @@
-<?= $this->HTML->css('/Manage/css/datatable_all_page', ['block' => 'css_header']) ?>
+<?= $this->HTML->css('/Manage/css/common/datatable_all_page', ['block' => 'css_header']) ?>
 <?= $this->HTML->css('/Manage/css/transaction/index', ['block' => 'css_header']) ?>
 <!-- Data table CSS -->
 <?= $this->element('Manage/data_table_css') ?>
@@ -37,7 +37,6 @@
                     <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'this-month']) ?>">This Month</option>
                 </select>
          <?= $this->Form->end() ?>
-
                  </h5>
                 <div class="ibox-tools">
                     <a class="collapse-link">
@@ -88,16 +87,16 @@
                                 <td><?= $transaction->note ?></td>
                                 <td class="actions">
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit',$transaction->id],array('class'=>'btn btn-warning')) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $transaction->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $transaction->id)]) ?>
+                                    <?= $this->Html->link(__('Delete'), ['action' => 'delete',$transaction->id],array('class'=>'btn btn-danger btn-delete')) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-                </table>                      
+                </table>
                 <!-- PAGINATION-->
                 <div class="row">
                     <nav class="pull-right" id="nav-pagination">
-                        <ul class="pagination">
+                        <ul class="pagination">                    
                             <?= $this->Paginator->prev('« Previous') ?>
                             <?= $this->Paginator->numbers() ?>
                             <?= $this->Paginator->next('Next »') ?>
@@ -113,9 +112,30 @@
         </div>
     </div>
 </div>
+<div  id="loading">
+</div>
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Delete Category</h4>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to delete this wallet ? 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="btn-delete" type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->
 <?= $this->element('Manage/data_table_js') ?>
-<?= $this->HTML->script('../Manage/js/datatable_all_page', array('block' => 'scriptBottom')) ?> 
+<?= $this->HTML->script('../Manage/js/common/datatable_all_page', array('block' => 'scriptBottom')) ?> 
 <?= $this->HTML->script('../Manage/js/transaction/transaction_index', array('block' => 'scriptBottom')) ?> 
+<?= $this->HTML->script('../Manage/js/transaction/spin.min', array('block' => 'scriptBottom')) ?> 

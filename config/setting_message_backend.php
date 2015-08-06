@@ -5,6 +5,8 @@ $config['message']['add_wallet_success'] = 'The wallet has been saved !';
 $config['message']['add_wallet_fail'] = 'The wallet could not be saved. Please, try again !';
 $config['message']['update_wallet_success'] = 'The wallet has been saved  !';
 $config['message']['update_wallet_fail'] = 'The wallet could not be saved. Please, try again  !';
+$config['message']['delete_wallet_success'] = 'The wallet has been deleted !';
+$config['message']['delete_wallet_fail'] = 'The wallet could not be deleted. Please, try again  !';
 $config['message']['wallet_not_found'] = 'The wallet not found!';
 
 // category

@@ -20,10 +20,8 @@
     <div class="col-lg-2">
     </div>
 </div>
-
 <!-- message success -->
 <div class="row"> <?= $this->Flash->render(); ?> </div>
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="ibox float-e-margins">

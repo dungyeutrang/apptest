@@ -64,7 +64,8 @@ Router::scope('/', function ($routes) {
         $routes->connect('/wallet/index', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet']);
         $routes->connect('/wallet/add-wallet', ['controller' => 'Wallet', 'action' => 'add'], ['_name' => 'wallet_add']);
         $routes->connect('/wallet/edit-wallet/:id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
-        $routes->connect('/wallet/delete-wallet/:id', ['controller' => 'Wallet', 'action' => 'index'], ['_name' => 'wallet_delete', 'id' => '\d+']);
+        $routes->connect('/wallet/delete/:id', ['controller' => 'Wallet', 'action' => 'delete'], ['_name' => 'wallet_delete', 'id' => '\d+']);
+        $routes->connect('/wallet/expense/:wallet_id', ['controller' => 'Wallet', 'action' => 'expense'], ['_name' => 'wallet_expense','wallet_id'=>'\d+']);
         
         // manage category
         $routes->connect('/category/index/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
@@ -73,7 +74,8 @@ Router::scope('/', function ($routes) {
         $routes->connect('/category/getdata/:wallet_id', ['controller' => 'Category', 'action' => 'getData'], ['_name' => 'category_get_data','wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         $routes->connect('/category/edit/:id', ['controller' => 'Category', 'action' => 'edit'], ['_name' => 'category_edit', 'id' => '\d+']);
         $routes->connect('/category/getdataupdate/:id/:parent_id/:wallet_id', ['controller' => 'Category', 'action' => 'getDataUpdate'], ['_name' => 'category_get_data_update', 'id' => '\d+','parent_id' => '\d+','wallet_id' => '\d+']);        
-        $routes->connect('/category/delete/wallet-:wallet_id/category-:id', ['controller' => 'Category', 'action' => 'delete'], ['_name' => 'category_delete', 'id' => '\d+','wallet_id' => '\d+','pass' => ['wallet_id']]);
+        $routes->connect('/category/delete/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'delete'], ['_name' => 'category_delete', 'id' => '\d+','wallet_id' => '\d+','pass' => ['wallet_id']]);
+        $routes->connect('/category/check/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'check'], ['_name' => 'category_check', 'id' => '\d+','wallet_id' => '\d+','pass' => ['wallet_id']]);
          
         // manage transaction
         $routes->connect('/transaction/index/:wallet_id',['controller'=>'Transaction','action'=>'index'],['_name'=>'transaction','wallet_id'=>'\d+','pass'=>['wallet_id']]);

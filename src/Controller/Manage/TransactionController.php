@@ -53,12 +53,12 @@ class TransactionController extends AppController
         $query = $this->request->query_date;
         $walletId = $this->request->wallet_id;
         $this->paginate = [
-            'limit' => 10,
+            'limit' => 2,
             'order' => [
                 'Category.name' => 'asc'
             ],
         ];
-        if ($query =="today") {
+        if ($query == "today") {
             $type = 1;
         } else if ($query == "this-week") {
             $type = 2;
@@ -67,7 +67,7 @@ class TransactionController extends AppController
         }
         $dataWallet = $this->Wallet->checkExist($walletId);
         if ($this->request->is(['ajax', 'post'])) {
-          
+
             $this->layout = "/Manage/ajax";
             $this->set('walletId', $walletId);
             $this->set('queryDate', $query);
@@ -75,10 +75,9 @@ class TransactionController extends AppController
             $this->set('transaction', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
             $this->set('_serialize', ['transaction']);
             $this->render('/Manage/Transaction/query_ajax');
-            
-        } else {  
-            
-            
+        } else {
+
+
             if (is_null($dataWallet)) {
                 $this->Flash->error(__(Configure::read('message.wallet_not_found')));
                 $this->redirect(['_name' => 'wallet']);
@@ -140,6 +139,7 @@ class TransactionController extends AppController
                     return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
                 }
             } catch (Exception $ex) {
+                $this->Transaction->connection()->rollback();
                 $this->Flash->error(__(Configure::read('message.add_transaction_fail')));
             }
         }
@@ -203,6 +203,7 @@ class TransactionController extends AppController
                         return $this->redirect(['action' => 'index', 'wallet_id' => $transaction->wallet_id]);
                     }
                 } catch (Exception $ex) {
+                    $this->Transaction->connection()->rollback();
                     $this->Flash->error(__(Configure::read('message.update_transaction_fail')));
                 }
             }
