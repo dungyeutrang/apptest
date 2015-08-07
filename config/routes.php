@@ -68,6 +68,7 @@ Router::scope('/', function ($routes) {
         $routes->connect('/wallet/edit-wallet/:wallet_id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
         $routes->connect('/wallet/delete/:wallet_id', ['controller' => 'Wallet', 'action' => 'delete'], ['_name' => 'wallet_delete', 'id' => '\d+']);
         $routes->connect('/wallet/expense/:wallet_id', ['controller' => 'Wallet', 'action' => 'expense'], ['_name' => 'wallet_expense','wallet_id'=>'\d+']);
+        $routes->connect('/wallet/transfer/:wallet_id', ['controller' => 'Transaction', 'action' => 'transfer'], ['_name' => 'wallet_transfer','wallet_id'=>'\d+']);
         
         // manage category
         $routes->connect('/category/index/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
@@ -83,10 +84,11 @@ Router::scope('/', function ($routes) {
         $routes->connect('/transaction/index/:wallet_id',['controller'=>'Transaction','action'=>'index'],['_name'=>'transaction','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/index/:wallet_id/:query_date',['controller'=>'Transaction','action'=>'query'],['_name'=>'transaction_query','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         
+        $routes->connect('/transaction/report-monthly/:wallet_id',['controller'=>'Transaction','action'=>'report'],['_name'=>'report_monthly','wallet_id'=>'\d+','pass'=>['wallet_id']]);
+        
         $routes->connect('/transaction/add/:wallet_id',['controller'=>'Transaction','action'=>'add'],['_name'=>'transaction_add','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/edit/:id',['controller'=>'Transaction','action'=>'edit'],['_name'=>'transaction_update','id'=>'\d+']);
-        $routes->connect('/transaction/delete/:id',['controller'=>'Transaction','action'=>'delete'],['_name'=>'transaction_delete','id'=>'\d+']);
-        
+        $routes->connect('/transaction/delete/:id',['controller'=>'Transaction','action'=>'delete'],['_name'=>'transaction_delete','id'=>'\d+']);        
         $routes->connect('/transaction/getdata/:wallet_id', ['controller' => 'Transaction', 'action' => 'getData'], ['_name' => 'transaction_get_data','wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         
         $routes->fallbacks('InflectedRoute');

@@ -30,3 +30,4 @@ $config['message']['update_transaction_fail'] = 'The transaction could not be sa
 $config['message']['delete_transaction_success'] = 'The transaction has been deleted !';
 $config['message']['delete_transaction_fail'] = 'The transaction could not be deleted. Please, try again !';
 $config['message']['add_transaction_wallet_new'] = 'Initial Balance';
+$config['message']['add_transaction_transfer'] = 'Give from wallet difference';

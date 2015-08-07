@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-     <?php $i=1; foreach ($transaction as $transaction): ?>
+     <?php $i=1; foreach ($transactions as $transaction): ?>
         <tr>
             <td><?= $i++ ?></td>
             <td><?= $transaction->wallet->name ?></td>

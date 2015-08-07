@@ -119,7 +119,7 @@ class CategoryTable extends Table
                                     $data = $this->CategoryDelete->find('list')->select(['category_id'])->where(['wallet_id' => $this->id])->toArray();
                                     if (count($data) != 0) {
                                         return $exp->notIn('Category.id', $data);
-                                    }else{
+                                    } else {
                                         return $exp;
                                     }
                                 })->andWhere(['Category.status' => 0]);
@@ -161,7 +161,7 @@ class CategoryTable extends Table
                                     $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                                     if (count($data) != 0) {
                                         return $exp->notIn('Category.id', $data);
-                                    }else{
+                                    } else {
                                         return $exp;
                                     }
                                 });
@@ -184,7 +184,7 @@ class CategoryTable extends Table
                     $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                     if (count($categoryDelete) != 0) {
                         return $exp->notIn('Category.id', $categoryDelete);
-                    }else{
+                    } else {
                         return $exp;
                     }
                 });
@@ -209,7 +209,7 @@ class CategoryTable extends Table
                                     $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                                     if (count($categoryDelete) != 0) {
                                         return $exp->notIn('Category.id', $categoryDelete);
-                                    }else{
+                                    } else {
                                         return $exp;
                                     }
                                 })
@@ -241,7 +241,7 @@ class CategoryTable extends Table
                                     return $exp->notIn('Category.id', $data);
                                     if (count($data) != 0) {
                                         return $exp->notIn('Category.id', $data);
-                                    }else{
+                                    } else {
                                         return $exp;
                                     }
                                 });
@@ -283,21 +283,43 @@ class CategoryTable extends Table
                         ->andWhere(function($exp) {
                     $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                     if (count($data) != 0) {
-                        return $exp->notIn('Category.id', $data); 
-                    }else{
+                        return $exp->notIn('Category.id', $data);
+                    } else {
                         return $exp;
                     }
                 });
                 return $data;
             }
-            
-            
+
+            /**
+             * get Category for transfer
+             * @param type $id
+             * @return type
+             */
+            public function getCategoryforTransfer($id)
+            {
+                $this->id = $id;
+                $data = $this->find('list', ['limit' => 200])->where(function($exp) {
+                            return $exp->isNull('wallet_id');
+                        })->orWhere(['wallet_id' => $this->id])
+                        ->andWhere(['Category.status' => 0, 'Category.catalog_id' => 2])
+                        ->andWhere(function($exp) {
+                    $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
+                    if (count($data) != 0) {
+                        return $exp->notIn('Category.id', $data);
+                    } else {
+                        return $exp;
+                    }
+                });
+                return $data;
+            }
+
             /**
              * get category for transaction update
              * @param type $id
              * @return type
              */
-            public function getCategoryUpdateTransaction($id,$catalogId)
+            public function getCategoryUpdateTransaction($id, $catalogId)
             {
                 $this->id = $id;
                 $data = $this->find('list', ['limit' => 200])->where(function($exp) {
@@ -307,8 +329,8 @@ class CategoryTable extends Table
                         ->andWhere(function($exp) {
                     $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                     if (count($data) != 0) {
-                        return $exp->notIn('Category.id', $data); 
-                    }else{
+                        return $exp->notIn('Category.id', $data);
+                    } else {
                         return $exp;
                     }
                 });
@@ -333,31 +355,33 @@ class CategoryTable extends Table
                                     $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                                     if (count($categoryDelete) != 0) {
                                         return $exp->notIn('Category.id', $categoryDelete);
-                                    }else{
+                                    } else {
                                         return $exp;
                                     }
                                 })
                                 ->toArray();
             }
-            
+
             /**
              * get catalogid 
              * @param type $id
              * @return type
              */
-            public function getCatalogId($id){
-                
-                return $this->find()->select(['catalog_id'])->where(['id'=>$id])->first()->catalog_id;
+            public function getCatalogId($id)
+            {
+
+                return $this->find()->select(['catalog_id'])->where(['id' => $id])->first()->catalog_id;
             }
-            
+
             /**
              *  delete category
              * @param type $walletId
              * @return type
              */
-            public function deleteCategory($walletId){
-                return $this->updateAll(['status'=>1], ['wallet_id'=>$walletId]);
-            }
+            public function deleteCategory($walletId)
+            {
+                return $this->updateAll(['status' => 1], ['wallet_id' => $walletId]);
+            }                   
 
         }
         

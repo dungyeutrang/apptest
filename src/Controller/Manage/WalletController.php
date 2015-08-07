@@ -19,7 +19,7 @@ class WalletController extends AppController
     {
         parent::initialize();
         $this->loadModel('Category');
-        $this->loadModel('Transaction');        
+        $this->loadModel('Transaction');
     }
 
     /**
@@ -83,7 +83,7 @@ class WalletController extends AppController
                 if ($this->Wallet->save($wallet, ['associated' => ['transaction']])) {
                     $this->Wallet->connection()->commit();
                     $this->Flash->success(__(Configure::read('message.add_wallet_success')));
-                    return $this->redirect(['_name' => 'transaction','wallet_id'=>$wallet->id]);
+                    return $this->redirect(['_name' => 'transaction', 'wallet_id' => $wallet->id]);
                 } else {
                     $this->Flash->error(__(Configure::read('message.add_wallet_fail')));
                 }
@@ -115,7 +115,7 @@ class WalletController extends AppController
             $wallet = $this->Wallet->patchEntity($wallet, $this->request->data);
             if ($this->Wallet->save($wallet)) {
                 $this->Flash->success(__(Configure::read('message.update_wallet_success')));
-                return $this->redirect(['_name' => 'transaction','wallet_id'=>$id]);
+                return $this->redirect(['_name' => 'transaction', 'wallet_id' => $id]);
             } else {
                 $this->Flash->error(__(Configure::read('message.update_wallet_fail')));
             }
@@ -168,22 +168,22 @@ class WalletController extends AppController
         }
         $dataExpense = $this->Wallet->getExpense($id);
         $dataIncome = $this->Wallet->getIncome($id);
-        $balance =$this->Wallet->getAmount($id);
-        $dataJsExpense =array();
-        $dataJsIncome =array();
-        foreach($dataExpense as $index=>$dt){
-            $dataJsExpense[$index]['label']=$dt->category->name;
-            $dataJsExpense[$index]['data']=$dt->amount;
+        $balance = $this->Wallet->getAmount($id);
+        $dataJsExpense = array();
+        $dataJsIncome = array();
+        foreach ($dataExpense as $index => $dt) {
+            $dataJsExpense[$index]['label'] = $dt->category->name;
+            $dataJsExpense[$index]['data'] = $dt->amount;
         }
-        $dataExpense=  json_encode($dataJsExpense);
-        foreach($dataIncome as $index=>$dt){
-            $dataJsIncome[$index]['label']=$dt->category->name;
-            $dataJsIncome[$index]['data']=$dt->amount;
+        $dataExpense = json_encode($dataJsExpense);
+        foreach ($dataIncome as $index => $dt) {
+            $dataJsIncome[$index]['label'] = $dt->category->name;
+            $dataJsIncome[$index]['data'] = $dt->amount;
         }
-        $dataIncome =  json_encode($dataJsIncome);        
-        $this->set('dataExpense',$dataExpense);
-        $this->set('dataIncome',$dataIncome);
-        $this->set('balance',$balance);
+        $dataIncome = json_encode($dataJsIncome);
+        $this->set('dataExpense', $dataExpense);
+        $this->set('dataIncome', $dataIncome);
+        $this->set('balance', $balance);
     }
-
+  
 }

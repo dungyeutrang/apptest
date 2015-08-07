@@ -23,4 +23,6 @@ class Transaction extends Entity
         'created_at' => true,
         'updated_at'=>true
     ];
+    
+    
 }

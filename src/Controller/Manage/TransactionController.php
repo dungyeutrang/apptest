@@ -19,7 +19,7 @@ class TransactionController extends AppController
         $this->loadModel('Category');
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
-        $this->loadModel('Wallet'); 
+        $this->loadModel('Wallet');
         $this->loadModel('TblUser');
     }
 
@@ -42,11 +42,11 @@ class TransactionController extends AppController
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
             $this->redirect(['_name' => 'wallet']);
         }
-        $this->TblUser->UpdateLastWallet($walletId,$this->Auth->user('id'));
+        $this->TblUser->UpdateLastWallet($walletId, $this->Auth->user('id'));
         $this->set('walletId', $walletId);
         $this->set('dataWallet', $dataWallet);
-        $this->set('transaction', $this->paginate($this->Transaction->getDataIndex($walletId)));
-        $this->set('_serialize', ['transaction']);
+        $this->set('transactions', $this->paginate($this->Transaction->getDataIndex($walletId)));
+        $this->set('_serialize', ['transactions']);
     }
 
     public function query()
@@ -74,8 +74,8 @@ class TransactionController extends AppController
             $this->set('walletId', $walletId);
             $this->set('queryDate', $query);
             $this->set('dataWallet', $dataWallet);
-            $this->set('transaction', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
-            $this->set('_serialize', ['transaction']);
+            $this->set('transactions', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
+            $this->set('_serialize', ['transactions']);
             $this->render('/Manage/Transaction/query_ajax');
         } else {
 
@@ -87,8 +87,8 @@ class TransactionController extends AppController
             $this->set('walletId', $walletId);
             $this->set('queryDate', $query);
             $this->set('dataWallet', $dataWallet);
-            $this->set('transaction', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
-            $this->set('_serialize', ['transaction']);
+            $this->set('transactions', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
+            $this->set('_serialize', ['transactions']);
         }
     }
 
@@ -213,8 +213,8 @@ class TransactionController extends AppController
             $tblCatalog = $this->Category->getMstCatalog();
             $this->set(compact('transaction', 'tblCategory', 'tblCatalog', 'walletId'));
             $this->set('_serialize', ['transaction']);
-            $this->set('wallet_id',$transaction->wallet_id);
-            $this->set('wallet_name',$this->Wallet->getWalletName($transaction->wallet_id));
+            $this->set('wallet_id', $transaction->wallet_id);
+            $this->set('wallet_name', $this->Wallet->getWalletName($transaction->wallet_id));
         }
     }
 
@@ -250,6 +250,76 @@ class TransactionController extends AppController
         } catch (Exception $ex) {
             $this->Flash->error(__(Configure::read('message.delete_transaction_fail')));
         }
+    }
+
+    public function report()
+    {        
+        $walletId = $this->request->wallet_id;
+        $dataWallet = $this->Wallet->checkExist($walletId);
+        if (is_null($dataWallet)) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            $this->redirect(['_name' => 'wallet']);
+        }
+        $this->paginate = [
+            'limit' => 10,
+            'contain' => ['Wallet', 'Category']
+        ];
+       $this->set('dataWallet', $dataWallet);
+       $this->set('transactions',$this->paginate($this->Transaction->getReport($walletId)));
+       $this->set('_serialize', ['transactions']);
+       
+    }
+
+    public function transfer()
+    {
+        $walletId = $this->request->wallet_id;
+        $wallet = $this->Wallet->checkExist($walletId);
+        if (!$wallet) {
+            $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+            return $this->redirect(['action' => 'index']);
+        }
+        $transaction = $this->Transaction->newEntity();
+
+        if ($this->request->is("post")) {
+            $amount = str_replace('.', '', $this->request->data['amount']);
+            $transaction = $this->Transaction->patchEntity($transaction, $this->request->data);
+            $transaction->amount = $amount;
+            $transaction->wallet_id = $walletId;
+            $walletTransfer = $this->Wallet->checkExist($this->request->data['wallet_id']);
+            if (!$walletTransfer) {
+                $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Transaction->connection()->begin();
+            try {
+                if ($this->Transaction->save($transaction)) {
+                    $wallet->amount = $wallet->amount - $transaction->amount;
+                    $this->Wallet->save($wallet);
+                    $walletTransfer->amount = $walletTransfer->amount + $amount;
+                    $data = [
+                        'category_id' => 2, // default when add new wallet,
+                        'wallet_id' => $walletTransfer->id,
+                        'note' => Configure::read('message.add_transaction_transfer'),
+                        'amount' => floatval($amount),
+                        'created_at' => new DateTime('now')
+                    ];                    
+                    $newTransaction = $this->Transaction->newEntity();
+                    $this->Transaction->patchEntity($newTransaction, $data);
+                    $this->Transaction->save($newTransaction);
+                    $this->Wallet->save($walletTransfer);
+                    $this->Transaction->connection()->commit();
+                    $this->Flash->success(__(Configure::read('message.add_transaction_success')));
+                    return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+                }
+            } catch (Exception $ex) {
+                $this->Transaction->connection()->rollback();
+                $this->Flash->error(__(Configure::read('message.add_transaction_fail')));
+            }
+        }
+        $tblCategory = $this->Category->getCategoryforTransfer($walletId);
+        $wallet = $this->Wallet->getWalletForTransfer($walletId, $this->Auth->user('id'));
+        $this->set(compact('tblCategory', 'walletId', 'transaction', 'wallet'));
+        $this->set('_serialize', ['transaction']);
     }
 
 }
