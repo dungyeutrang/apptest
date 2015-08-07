@@ -153,8 +153,8 @@ class WalletTable extends Table
      * @param type $userId
      */
     public function getWalletDefault($userId)
-    {        
-        return $this->find()->where(['user_id'=>$userId,'is_default'=>1,'status'=>0])->first()->id;
+    {
+        return $this->find()->where(['user_id'=>$userId,'is_default'=>1])->first()->id;
     }
     
     /**
@@ -162,7 +162,7 @@ class WalletTable extends Table
      */    
     public function getWallet($userId)
     {        
-         return $this->find()->where(['user_id'=>$userId,'status'=>0])->toArray();
+         return $this->find()->where(['user_id'=>$userId])->toArray();
     }
     
     /**

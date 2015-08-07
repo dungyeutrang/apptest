@@ -22,7 +22,8 @@ class CategoryController extends AppController
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
         $this->loadModel('Transaction');
-        $this->upload = new UploadFile();        
+        $this->loadModel('TblUser');
+        $this->upload = new UploadFile();
     }
 
     /**
@@ -45,6 +46,7 @@ class CategoryController extends AppController
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
             $this->redirect(['_name' => 'wallet']);
         }
+        $this->TblUser->UpdateLastWallet($id,$this->Auth->user('id'));
         $this->set('walletId', $id);
         $this->set('walletName', $dataWallet->name);
         $this->set('category', $this->paginate($this->Category->getCategoryByWallet($id)));
@@ -74,6 +76,7 @@ class CategoryController extends AppController
      */
     public function add()
     {
+        
         $id = $this->request->wallet_id;
         $dataWallet = $this->Wallet->checkExist($id);
         if (is_null($dataWallet)) {
@@ -165,9 +168,14 @@ class CategoryController extends AppController
     {
         $id = $this->request->id;
         $category = $this->Category->checkExist($id);
+//        var_dump($category->is_default);die;
         if (!$category) {
             $this->Flash->error(__(Configure::read('message.category_not_found')));
-            return $this->redirect(['_name' => 'category']);
+            return $this->redirect(['_name' => 'wallet']);
+        }
+        if ($category->is_default == 1) {
+            $this->Flash->error(__(Configure::read('message.category_not_update')));
+            return $this->redirect($this->referer());
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $avatarOld = $category->avatar;
@@ -197,6 +205,8 @@ class CategoryController extends AppController
         $parentCategory = $this->Category->getParentidUpdate($category->catalog_id, $category->parent_id, $category->wallet_id, $category->id);
         $this->set(compact('category', 'mstCatalog', 'parentCategory'));
         $this->set('_serialize', ['category']);
+        $this->set('wallet_id', $category->wallet_id);
+        $this->set('wallet_name', $this->Wallet->getWalletName($category->wallet_id));
     }
 
     /**

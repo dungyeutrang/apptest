@@ -25,7 +25,7 @@ class TblUserTable extends Table
         parent::initialize($config);
         $this->table('tbl_user');
         $this->displayField('id');
-        $this->primaryKey('id');        
+        $this->primaryKey('id');
     }
 
     /**
@@ -129,9 +129,24 @@ class TblUserTable extends Table
         return $user->find()->where(['email' => $email])->first();
     }
 
-    public function updateEntity($user,$entity)
+    public function updateEntity($user, $entity)
     {
         $user->save($entity);
+    }
+
+    /**
+     * update last wallet
+     * @param type $walletId
+     * @param type $userId
+     */
+    public function UpdateLastWallet($walletId, $userId)
+    {
+        $this->updateAll(['last_wallet_id' => $walletId], ['id' => $userId]);
+    }
+
+    public function getLastWallet($userId)
+    {
+      return  $this->find()->where(['id'=>$userId])->first()->last_wallet_id;
     }
 
 }

@@ -12,15 +12,16 @@ class UploadFile
 
     public function deleteFile($url)
     {
-        if (file_exists($url) && !is_dir($url)) {
-            unlink($url);
+        if (file_exists($this->baseUrl.$url) && !is_dir($this->baseUrl.$url)) {
+            unlink($this->baseUrl.$url);
         }
     }
 
     public function addDir($url)
     {
-        if (!file_exists($url)) {
-            mkdir($url);
+//        var_dump(file_exists($url));die;
+        if (!file_exists($this->baseUrl.$url)&& !is_dir($this->baseUrl.$url)) {
+            mkdir($this->baseUrl.$url);
         }
     }
     

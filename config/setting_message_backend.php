@@ -19,6 +19,7 @@ $config['message']['delete_category_fail'] = 'The category could not be deleted.
 $config['message']['delete_category_constraint'] = 'You must be delete all transaction of this category.!';
 $config['message']['category_default'] = 'The category default of system not be deleted.!';
 $config['message']['category_not_found'] = 'The category not found !';
+$config['message']['category_not_update'] = 'The category default of system not be updated !';
 
 // transaction
 $config['message']['add_transaction_success'] = 'The transaction has been saved !';

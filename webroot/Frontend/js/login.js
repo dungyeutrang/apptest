@@ -10,7 +10,7 @@ $(function () {
             data: {_csrfToken: token, email: email, password: password},
             success: function (data, textStatus, jqXHR) {
                 if (data.code == 1) {
-                    location.replace(window.location.origin);
+                    location.replace(data.url);
                 }
                 else {
                   $('#error_message_login').text(data.message).css('padding','10px');

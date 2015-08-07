@@ -17,6 +17,7 @@
 namespace App\Controller\Frontend;
 
 use Cake\Controller\Controller;
+use Cake\Routing\Router;
 
 /**
  * Application Controller
@@ -42,10 +43,11 @@ class AppController extends Controller
         $this->layout = "Frontend/index";
         $this->loadComponent('Flash');
         $this->loadModel('Wallet');
+        $this->loadModel('TblUser');
         $this->loadComponent("csrf");
         $this->loadComponent('Auth', [
             'loginAction' => [
-                'prefix'=>'Frontend',
+                'prefix' => 'Frontend',
                 'controller' => 'TblUser',
                 'action' => 'login',
             ],
@@ -59,16 +61,19 @@ class AppController extends Controller
                 ]
             ],
             'logoutRedirect' => [
-                'prefix'=>'Frontend',
+                'prefix' => 'Frontend',
                 'controller' => 'Pages',
                 'action' => 'display',
                 'home'
             ]
         ]);
-        $this->set('user',$this->Auth->user());
-        if($this->Auth->user()){
-        $this->set('walletDefault',$this->Wallet->getWalletDefault($this->Auth->user('id')));            
+        $this->set('user', $this->Auth->user());
+//        var_dump($this->Auth->user());die;
+        if ($this->Auth->user()) {
+//            var_dump($this->Auth->user('id'));die;
+            $this->set('walletDefault', $this->Wallet->getWalletDefault($this->Auth->user('id')));
         }
+
     }
 
 }

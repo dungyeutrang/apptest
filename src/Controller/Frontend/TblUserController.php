@@ -4,6 +4,7 @@ namespace App\Controller\Frontend;
 
 use Cake\Core\Configure;
 use lib\SendMail;
+use Cake\Routing\Router;
 
 /**
  * TblUser Controller
@@ -34,6 +35,13 @@ class TblUserController extends AppController
             if ($user && $user['is_active'] == 1) {
                 $this->Auth->setUser($user);
                 $response['code'] = 1;
+                $lastWallet = $this->TblUser->getLastWallet($this->Auth->user('id'));
+                if($lastWallet){
+                $url= Router::url(['_name' => 'transaction', 'wallet_id' => $lastWallet]);
+                }else{
+                $url= Router::url(['_name' => 'wallet_add']);
+                }
+                $response['url'] = $url;
             } else if ($user && $user['is_active'] != 1) {
                 $response['code'] = 2;
                 $response['message'] = Configure::read('message.error_active');
@@ -56,7 +64,12 @@ class TblUserController extends AppController
             $user = $this->Auth->identify();
             if ($user && $user['is_active'] == 1) {
                 $this->Auth->setUser($user);
-                return $this->redirect(['prefix' => 'manage', 'controller' => 'Home', 'action' => 'index']);
+                $lastWallet = $this->TblUser->getLastWallet($this->Auth->user('id'));
+                if(!is_null($lastWallet)){
+                return $this->redirect(['_name' => 'transaction', 'wallet_id' => $lastWallet]);
+                }else{
+                return $this->redirect(['_name' => 'wallet_add']);
+                }
             } else if ($user && $user['is_active'] != 1) {
                 $this->Flash->error(__(Configure::read('message.error_active')));
             } else {
@@ -162,7 +175,7 @@ class TblUserController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function updateProfile()
-    {
+    {      
         $tblUser = $this->TblUser->get($this->Auth->user('id'));
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tblUser = $this->TblUser->patchEntity($tblUser, $this->request->data);

@@ -20,6 +20,7 @@ class TransactionController extends AppController
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
         $this->loadModel('Wallet'); 
+        $this->loadModel('TblUser');
     }
 
     /**
@@ -41,6 +42,7 @@ class TransactionController extends AppController
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
             $this->redirect(['_name' => 'wallet']);
         }
+        $this->TblUser->UpdateLastWallet($walletId,$this->Auth->user('id'));
         $this->set('walletId', $walletId);
         $this->set('dataWallet', $dataWallet);
         $this->set('transaction', $this->paginate($this->Transaction->getDataIndex($walletId)));

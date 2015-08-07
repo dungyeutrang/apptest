@@ -19,7 +19,7 @@ class WalletController extends AppController
     {
         parent::initialize();
         $this->loadModel('Category');
-        $this->loadModel('Transaction');
+        $this->loadModel('Transaction');        
     }
 
     /**
@@ -134,7 +134,7 @@ class WalletController extends AppController
      */
     public function delete()
     {
-        $id = $this->request->id;
+        $id = $this->request->wallet_id;
         $wallet = $this->Wallet->checkExist($id);
         if (!$wallet) {
             $this->Flash->error(__(Configure::read('message.wallet_not_found')));
