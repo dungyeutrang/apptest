@@ -37,8 +37,8 @@
                 <p>Transfer moeny to wallet difference</p>
                 <?= $this->Form->create($transaction,array('class'=>'form-horizontal')) ?>
                 <?php
-                echo $this->Form->input('label',array('label'=>'From','class'=>'form-control','default'=>$wallet_name));
-                echo $this->Form->input('wallet_id',array('label'=>'Select wallet','options'=>$wallet,'class'=>'form-control'));
+                echo $this->Form->input('wallet_id_from',array('id'=>'wallet_from','options'=>$allWallet,'label'=>'Select wallet from','class'=>'form-control','default'=>$wallet_id));
+                echo $this->Form->input('wallet_id_to',array('id'=>'wallet_to','label'=>'Select wallet to','options'=>$allWallet,'class'=>'form-control'));
                 echo $this->Form->input('amount',array('type'=>'text','class'=>'form-control','placeholder'=>'500.000'));
                 echo $this->Form->input('note',array('class'=>'form-control','placeholder'=>'comment this here'));
                 echo $this->Form->input('category_id', ['options' => $tblCategory,'class'=>'form-control']);
@@ -54,3 +54,4 @@
 <?= $this->element('Manage/configuration') ?>
 <?= $this->HTML->script('/Manage/js/wallet/add', array('block' => 'scriptBottom', 'inline' => false)) ?>
 <?= $this->HTML->script('/Manage/js/transaction/transaction_add', array('block' => 'scriptBottom')) ?>
+<?= $this->HTML->script('/Manage/js/transaction/transaction_transfer', array('block' => 'scriptBottom')) ?>

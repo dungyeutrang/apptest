@@ -13,7 +13,7 @@
                 <a>Wallet</a>
             </li>
             <li>
-            <a>Transaction</a>
+                <a>Transaction</a>
             </li>
             <li class="active">
                 <strong>Index</strong>
@@ -30,14 +30,14 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5 id="title-balance"><b>Balance: <?= $this->Number->format($dataWallet->amount) ?></b>
-         <?= $this->Form->create(null)?> 
-                <select id="change-date">
-                    <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'today'])?>">To day</option>
-                    <option value="<?= $this->Url->build(['_name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'this-week']) ?>">This Week</option>
-                    <option value="<?= $this->Url->build(['name'=>'transaction_query','wallet_id'=>$walletId,'query_date'=>'this-month']) ?>">This Month</option>
-                </select>
-         <?= $this->Form->end() ?>
-                 </h5>
+                    <?= $this->Form->create(null) ?> 
+                    <select id="change-date">
+                        <option value="<?= $this->Url->build(['_name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'today']) ?>">To day</option>
+                        <option value="<?= $this->Url->build(['_name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'this-week']) ?>">This Week</option>
+                        <option value="<?= $this->Url->build(['name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'this-month']) ?>">This Month</option>
+                    </select>
+                    <?= $this->Form->end() ?>
+                </h5>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -72,50 +72,55 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=1; foreach ($transactions as $transaction): ?>
+                        <?php $i = 1;
+                        foreach ($transactions as $transaction): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
                                 <td><?= $transaction->wallet->name ?></td>
                                 <td>
-                                    <?= $this->HTML->image($transaction->category->avatar,array('class'=>'circle icon-category')); ?> &nbsp; <?= h($transaction->category->name); ?>
+    <?= $this->HTML->image($transaction->category->avatar, array('class' => 'circle icon-category')); ?> &nbsp; <?= h($transaction->category->name); ?>
                                 </td>
                                 <td>
-                                    <?= $transaction->category->mst_catalog->name ?>
+    <?= $transaction->category->mst_catalog->name ?>
                                 </td>
                                 <td><?= $this->Number->format($transaction->amount) ?></td>
-                                  <td><?= date_format($transaction->created_at,'Y-m-d') ?></td>
+                                <td><?= date_format($transaction->created_at, 'Y-m-d') ?></td>
                                 <td><?= $transaction->note ?></td>
                                 <td class="actions">
-                                    <?= $this->Html->link(__('Edit'), ['action' => 'edit',$transaction->id],array('class'=>'btn btn-warning')) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $transaction->id], ['class'=>'btn btn-danger','confirm' => __('Are you sure you want to delete # {0}?', $transaction->id)]) ?>
+                                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $transaction->id], array('class' => 'btn btn-warning')) ?>
+    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $transaction->id], ['class' => 'btn btn-danger', 'confirm' => __('Are you sure you want to delete # {0}?', $transaction->id)]) ?>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+<?php endforeach; ?>
                     </tbody>
                 </table>
                 <!-- PAGINATION-->
                 <div class="row">
-                    <nav class="pull-right" id="nav-pagination">
-                        <ul class="pagination">
-                            
-                            <?= $this->Paginator->options(array(
-                            'url' => array(
-                              '_name' => 'transaction_query',
-                                'wallet_id'=>$walletId,
-                                'query_date'=>$queryDate
-                            )
-                          )); ?>
-                            
-                            <?= $this->Paginator->prev('« Previous') ?>
-                            <?= $this->Paginator->numbers() ?>
-                            <?= $this->Paginator->next('Next »') ?>
-                        </ul>
-                        <p><?=
-                            $this->Paginator->counter([
-                                'format' => 'Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total'
-                            ])
-                            ?></p>
-                    </nav>
+<?php if ($this->Paginator->hasPage(2)): ?>
+                        <nav class="pull-right" id="nav-pagination">
+                            <ul class="pagination">
+
+                                <?=
+                                $this->Paginator->options(array(
+                                    'url' => array(
+                                        '_name' => 'transaction_query',
+                                        'wallet_id' => $walletId,
+                                        'query_date' => $queryDate
+                                    )
+                                ));
+                                ?>
+
+    <?= $this->Paginator->prev('« Previous') ?>
+                                <?= $this->Paginator->numbers() ?>
+                                <?= $this->Paginator->next('Next »') ?>
+                            </ul>
+                            <p><?=
+                                $this->Paginator->counter([
+                                    'format' => 'Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total'
+                                ])
+                                ?></p>
+                        </nav>
+<?php endif; ?>
                 </div>
             </div> <!-- end ibox content -->
         </div>

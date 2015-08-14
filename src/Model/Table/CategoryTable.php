@@ -80,7 +80,7 @@ class CategoryTable extends Table
                 $validator
                         ->add('avatar', 'file', ['rule' => array('mimeType', array('image/gif', 'image/png', 'image/jpg', 'image/jpeg')), 'message' => 'Type of image invalid'])
                         ->requirePresence('avatar', 'create')
-                        ->notEmpty('avatar');
+                        ->allowEmpty('avatar');
 
 
                 $validator
@@ -179,7 +179,7 @@ class CategoryTable extends Table
                         ->andWhere(function($exp) {
                             return $exp->isNull('wallet_id');
                         })->orWhere(['wallet_id' => $this->id])
-                        ->andWhere(['catalog_id' => 1, 'parent_id' => 0, 'status' => 0])
+                        ->andWhere(['catalog_id' => 2, 'parent_id' => 0, 'status' => 0])
                         ->andWhere(function($exp) {
                     $categoryDelete = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                     if (count($categoryDelete) != 0) {
@@ -253,7 +253,7 @@ class CategoryTable extends Table
              */
             public function getMstCatalog()
             {
-                return $this->MstCatalog->find('list', ['limit' => 200]);
+                return $this->MstCatalog->find('list', ['limit' => 200])->order(['id'=>'DESC']);
             }
 
             /**
@@ -279,7 +279,7 @@ class CategoryTable extends Table
                 $data = $this->find('list', ['limit' => 200])->where(function($exp) {
                             return $exp->isNull('wallet_id');
                         })->orWhere(['wallet_id' => $this->id])
-                        ->andWhere(['Category.status' => 0, 'Category.catalog_id' => 1])
+                        ->andWhere(['Category.status' => 0, 'Category.catalog_id' => 2])
                         ->andWhere(function($exp) {
                     $data = $this->CategoryDelete->find('list')->where(['wallet_id' => $this->id])->select(['category_id'])->toArray();
                     if (count($data) != 0) {

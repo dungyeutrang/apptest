@@ -68,12 +68,9 @@ class AppController extends Controller
             ]
         ]);
         $this->set('user', $this->Auth->user());
-//        var_dump($this->Auth->user());die;
         if ($this->Auth->user()) {
-//            var_dump($this->Auth->user('id'));die;
             $this->set('walletDefault', $this->Wallet->getWalletDefault($this->Auth->user('id')));
         }
-
     }
 
 }

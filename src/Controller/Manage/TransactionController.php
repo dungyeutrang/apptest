@@ -55,7 +55,7 @@ class TransactionController extends AppController
         $query = $this->request->query_date;
         $walletId = $this->request->wallet_id;
         $this->paginate = [
-            'limit' => 2,
+            'limit' => 10,
             'order' => [
                 'Category.name' => 'asc'
             ],
@@ -186,6 +186,7 @@ class TransactionController extends AppController
         } else {
             if ($this->request->is(['post', ['put']])) {
                 $amountOld = $transaction->amount;
+                $oldCategory = $transaction->category_id;
                 $transaction = $this->Transaction->patchEntity($transaction, $this->request->data);
                 $amount = str_replace('.', '', $this->request->data['amount']);
                 $transaction->amount = $amount;
@@ -194,10 +195,18 @@ class TransactionController extends AppController
                 $transaction->updated_at = new DateTime('now');
                 try {
                     if ($this->Transaction->save($transaction)) {
-                        if ($this->Category->getCatalogId($transaction->category_id) == 1) {
-                            $dataWallet->amount = $dataWallet->amount + $transaction->amount - $amountOld;
-                        } else {
-                            $dataWallet->amount = $dataWallet->amount - ($transaction->amount - $amountOld);
+                        if ($transaction->category_id == $oldCategory) {
+                            if ($this->Category->getCatalogId($transaction->category_id) == 1) {
+                                $dataWallet->amount = $dataWallet->amount + $transaction->amount - $amountOld;
+                            } else {
+                                $dataWallet->amount = $dataWallet->amount - ($transaction->amount - $amountOld);
+                            }
+                        }else{
+                             if ($this->Category->getCatalogId($transaction->category_id) == 1) {
+                                $dataWallet->amount = $dataWallet->amount + $transaction->amount + $amountOld;
+                            } else {
+                                $dataWallet->amount = $dataWallet->amount - ($transaction->amount + $amountOld);
+                            }
                         }
                         $this->Wallet->save($dataWallet);
                         $this->Transaction->connection()->commit();
@@ -215,6 +224,7 @@ class TransactionController extends AppController
             $this->set('_serialize', ['transaction']);
             $this->set('wallet_id', $transaction->wallet_id);
             $this->set('wallet_name', $this->Wallet->getWalletName($transaction->wallet_id));
+            $this->set('wallet_amount', $this->Wallet->getWalletAmount($transaction->wallet_id));
         }
     }
 
@@ -253,7 +263,7 @@ class TransactionController extends AppController
     }
 
     public function report()
-    {        
+    {
         $walletId = $this->request->wallet_id;
         $dataWallet = $this->Wallet->checkExist($walletId);
         if (is_null($dataWallet)) {
@@ -264,10 +274,9 @@ class TransactionController extends AppController
             'limit' => 10,
             'contain' => ['Wallet', 'Category']
         ];
-       $this->set('dataWallet', $dataWallet);
-       $this->set('transactions',$this->paginate($this->Transaction->getReport($walletId)));
-       $this->set('_serialize', ['transactions']);
-       
+        $this->set('dataWallet', $dataWallet);
+        $this->set('transactions', $this->paginate($this->Transaction->getReport($walletId)));
+        $this->set('_serialize', ['transactions']);
     }
 
     public function transfer()
@@ -284,29 +293,30 @@ class TransactionController extends AppController
             $amount = str_replace('.', '', $this->request->data['amount']);
             $transaction = $this->Transaction->patchEntity($transaction, $this->request->data);
             $transaction->amount = $amount;
-            $transaction->wallet_id = $walletId;
-            $walletTransfer = $this->Wallet->checkExist($this->request->data['wallet_id']);
-            if (!$walletTransfer) {
+            $transaction->wallet_id = $this->request->data['wallet_id_from'];
+            $walletFrom = $this->Wallet->checkExist($this->request->data['wallet_id_from']);
+            $walletTo = $this->Wallet->checkExist($this->request->data['wallet_id_to']);
+            if (!$walletFrom||!$walletTo) {
                 $this->Flash->error(__(Configure::read('message.wallet_not_found')));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Transaction->connection()->begin();
             try {
-                if ($this->Transaction->save($transaction)) {
-                    $wallet->amount = $wallet->amount - $transaction->amount;
-                    $this->Wallet->save($wallet);
-                    $walletTransfer->amount = $walletTransfer->amount + $amount;
+                if ($this->Transaction->save($transaction)){
+                    $walletFrom->amount = $walletFrom->amount - $transaction->amount;
+                    $this->Wallet->save($walletFrom);
+                    $walletTo->amount = $walletTo->amount + $amount;
                     $data = [
                         'category_id' => 2, // default when add new wallet,
-                        'wallet_id' => $walletTransfer->id,
+                        'wallet_id' => $walletTo->id,
                         'note' => Configure::read('message.add_transaction_transfer'),
                         'amount' => floatval($amount),
                         'created_at' => new DateTime('now')
-                    ];                    
+                    ];
                     $newTransaction = $this->Transaction->newEntity();
                     $this->Transaction->patchEntity($newTransaction, $data);
                     $this->Transaction->save($newTransaction);
-                    $this->Wallet->save($walletTransfer);
+                    $this->Wallet->save($walletTo);
                     $this->Transaction->connection()->commit();
                     $this->Flash->success(__(Configure::read('message.add_transaction_success')));
                     return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
@@ -316,9 +326,11 @@ class TransactionController extends AppController
                 $this->Flash->error(__(Configure::read('message.add_transaction_fail')));
             }
         }
+        
         $tblCategory = $this->Category->getCategoryforTransfer($walletId);
-        $wallet = $this->Wallet->getWalletForTransfer($walletId, $this->Auth->user('id'));
-        $this->set(compact('tblCategory', 'walletId', 'transaction', 'wallet'));
+        $allWallet =$this->Wallet->getWalletOfUser($this->Auth->user('id'));
+//        $wallet = $this->Wallet->getWalletForTransfer($walletId, $this->Auth->user('id'));
+        $this->set(compact('tblCategory', 'walletId', 'transaction','allWallet'));
         $this->set('_serialize', ['transaction']);
     }
 

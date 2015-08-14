@@ -177,6 +177,17 @@ class WalletTable extends Table
     }
     
     /**
+     * return amount of wallet
+     * @param type $id
+     * @return type
+     */
+    public function getWalletAmount($id)
+    {
+        return $this->find()->where(['id'=>$id])->first()->amount ;
+        
+    }
+    
+    /**
      *  get wallet for transfer
      * @param type $walletId
      * @param type $userId
@@ -185,6 +196,16 @@ class WalletTable extends Table
     public function getWalletForTransfer($walletId,$userId){
         
         return $this->find('list')->where(['user_id'=>$userId,'status'=>0,'id !='=>$walletId])->toArray();
+    }
+    
+    /**
+     * get wallet not be delete
+     * @param type $userId
+     * @return type
+     */    
+    public function getWalletOfUser($userId)
+    {
+        return $this->find('list')->where(['user_id'=>$userId,'status'=>0])->toArray();        
     }
     
     

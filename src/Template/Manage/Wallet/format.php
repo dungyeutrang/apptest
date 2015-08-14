@@ -147,7 +147,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form id="form_change_time" class="form-horizontal">
+                    <form class="form-horizontal">
                         <div class="form-group">
                             <label for="First time" class="col-sm-2 control-label">Start Time</label>
                             <div class="col-sm-10">
@@ -162,10 +162,11 @@
                         </div>           
                     </form>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
-                <button type="button" id="btn_query" class="btn btn-primary">Search</button>
+                <button class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

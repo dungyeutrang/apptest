@@ -5,8 +5,8 @@ $(function () {
         bPaginate: false,
         bInfo: false,
         aoColumnDefs: [
-            {bSortable: false, aTargets: [4]},
-            {bSortable: false, aTargets: [5]}
+            {bSortable: false, aTargets: [3]},
+            {bSortable: false, aTargets: [4]}
         ],
         LengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         iDisplayLength: 10,
@@ -33,7 +33,7 @@ $(function () {
         , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
         , zIndex: 2e9 // The z-index (defaults to 2000000000)
         , className: 'spinner' // The CSS class to assign to the spinner
-        , top: '50%' // Top position relative to parent
+        , top: '30%' // Top position relative to parent
         , left: '50%' // Left position relative to parent
         , shadow: false // Whether to render a shadow
         , hwaccel: false // Whether to use hardware acceleration
@@ -155,6 +155,10 @@ $(function () {
             dataType: 'json'
         });
     }
+    
+    $('.btn-delete-default , .btn-edit-default').click(function(){
+         $('#delete_category_default').modal('show');
+    });
 
 });
 

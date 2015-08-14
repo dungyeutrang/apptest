@@ -38,11 +38,12 @@ class AppController extends Controller
                 'home'
             ]
         ]);
-//        var_dump(count($this->Wallet->getWallet($this->Auth->user('id'))));die;
-        $this->set('listWallet',$this->Wallet->getWallet($this->Auth->user('id')));
-        $this->set('wallet_id',$this->request->wallet_id);
-        if($this->request->wallet_id){            
-        $this->set('wallet_name',$this->Wallet->getWalletName($this->request->wallet_id));
+        $this->set('user', $this->Auth->user());
+        $this->set('listWallet', $this->Wallet->getWallet($this->Auth->user('id')));
+        $this->set('wallet_id', $this->request->wallet_id);
+        if ($this->request->wallet_id) {
+            $this->set('wallet_name', $this->Wallet->getWalletName($this->request->wallet_id));
+            $this->set('wallet_amount', $this->Wallet->getWalletAmount($this->request->wallet_id));
         }
     }
 

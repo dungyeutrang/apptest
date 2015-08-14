@@ -5029,3 +5029,14 @@ body.skin-3 {
     display: none;
   }
 }
+
+#icon_wallet{
+    max-width: 48px;
+    max-height: 48px;
+}
+div.wrapper-content{
+    padding-right: 23px !important;  
+}
+#page-wrapper .row .col-lg-12{
+    padding-right: 23px !important;  
+}

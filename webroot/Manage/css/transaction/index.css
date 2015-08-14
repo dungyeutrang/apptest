@@ -36,3 +36,13 @@ form{
     left: 119px;
     top: -18px;
 }
+#form_change_time{
+    position: initial;
+    /*top:0px;*/
+    /*lef*/
+}
+
+.ui-datepicker td {
+    border: 1px solid #CCC;
+    padding: 0;
+}

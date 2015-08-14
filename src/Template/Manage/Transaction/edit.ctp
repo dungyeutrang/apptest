@@ -1,7 +1,7 @@
 <?= $this->HTML->css('/Manage/css/wallet/add', ['block' => 'css_header', 'inline' => false]) ?>
 <div class="row wrapper border-bottom white-bg page-heading" id="head-title">
     <div class="col-lg-10">
-        <h2>Add Transaction</h2>
+        <h2>Update Transaction</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="index.html">Manage</a>
