@@ -83,9 +83,8 @@ Router::scope('/', function ($routes) {
         // manage transaction
         $routes->connect('/transaction/index/:wallet_id',['controller'=>'Transaction','action'=>'index'],['_name'=>'transaction','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/index/:wallet_id/:query_date',['controller'=>'Transaction','action'=>'query'],['_name'=>'transaction_query','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-                        
+        $routes->connect('/transaction/changeview/:wallet_id/:type',['controller'=>'Transaction','action'=>'changeView'],['_name'=>'transaction_change_view','wallet_id'=>'\d+','type'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/report-monthly/:wallet_id',['controller'=>'Transaction','action'=>'report'],['_name'=>'report_monthly','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-        
         $routes->connect('/transaction/add/:wallet_id',['controller'=>'Transaction','action'=>'add'],['_name'=>'transaction_add','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/edit/:id',['controller'=>'Transaction','action'=>'edit'],['_name'=>'transaction_update','id'=>'\d+']);
         $routes->connect('/transaction/delete/:id',['controller'=>'Transaction','action'=>'delete'],['_name'=>'transaction_delete','id'=>'\d+']);        

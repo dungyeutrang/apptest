@@ -13,27 +13,40 @@
     padding: 0px 15px;
     color: rgba(62, 57, 57, 0.9);
     text-align: center;
+    margin-right: 10px;
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 650px) {
+    #balance{
+        margin-bottom: 10px;
+    }
     form{        
         padding: 0px;
         margin: 0px;
         position: initial !important;
     }
-    
+
     .ibox-title{
-        height: 73px !important;
+        height: 120px !important;
     }
     #change-date{
         margin-left: 0px;
-        margin-top: 5px;
+        margin-top: 5px;       
+    }
+
+    #search_time_other{
+
     }
 
 }
+#balance{
+    position: relative;
+    top: 5px;
+    font-size: 16px;
+}
 form{
     height: 32px;
-    position: relative ;
-    left: 119px;
+    position: relative;
+    left: 158px;
     top: -18px;
 }
 #form_change_time{
@@ -45,4 +58,22 @@ form{
 .ui-datepicker td {
     border: 1px solid #CCC;
     padding: 0;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: solid #FFF;
+    border-width: 1px 0 0 1px;
+}
+#search_time_other{
+    height: 30px;
+    padding: 0 10px;
+}
+.btn-lg{
+    padding: 18px 27px;
+    font-size: 16px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    padding: 0px;
 }

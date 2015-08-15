@@ -34,24 +34,25 @@
                     <select id="change-date">
                         <option value="<?= $this->Url->build(['_name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'today']) ?>">To day</option>
                         <option value="<?= $this->Url->build(['_name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'this-week']) ?>">This Week</option>
-                        <option value="<?= $this->Url->build(['name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'this-month']) ?>">This Month</option>
+                        <option value="<?= $this->Url->build(['name' => 'transaction_query', 'wallet_id' => $walletId, 'query_date' => 'this-month']) ?>">This Month</option>                       
                     </select>
+                   <button type="button" value="<?= $this->Url->build(['_name' => 'transaction', 'wallet_id' => $walletId]) ?>" id="search_time_other" class="btn btn-primary">Search time other</button>
                     <?= $this->Form->end() ?>
                 </h5>
                 <div class="ibox-tools">
-                    <a class="collapse-link">
+                    <a class="collapse-link btn-lg">
                         <i class="fa fa-chevron-up"></i>
                     </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
+                    <a class="dropdown-toggle btn-lg" data-toggle="dropdown" href="#">
+                        <i class="fa fa-cog fa-spin"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#">Config option 1</a>
+                        <li><a href="<?= $this->Url->build(['_name'=>'transaction_change_view','wallet_id'=>$walletId,'type'=>1]) ?>">View by Transaction</a>
                         </li>
-                        <li><a href="#">Config option 2</a>
+                        <li><a href="<?=   $this->Url->build(['_name'=>'transaction_change_view','wallet_id'=>$walletId,'type'=>2])  ?>">View by Category</a>
                         </li>
                     </ul>
-                    <a class="close-link">
+                    <a class="close-link btn-lg">
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
@@ -88,7 +89,7 @@
                                 <td><?= $transaction->note ?></td>
                                 <td class="actions">
                                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $transaction->id], array('class' => 'btn btn-warning')) ?>
-    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $transaction->id], ['class' => 'btn btn-danger', 'confirm' => __('Are you sure you want to delete # {0}?', $transaction->id)]) ?>
+    <?= $this->Html->link(__('Delete'), ['action' => 'delete', $transaction->id], array('class' => 'btn btn-danger btn-delete')) ?>
                                 </td>
                             </tr>
 <?php endforeach; ?>
@@ -128,6 +129,61 @@
 </div>
 <div  id="loading">
 </div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Delete Category</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this wallet ? 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btn-delete" type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal change time -->
+<div id="myModal10" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="opacity: 1; display: block; transform: scaleX(1) scaleY(1);">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Please select time !</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form id="form_change_time" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="First time" class="col-sm-2 control-label">Start Time</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="first_time">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="End time" class="col-sm-2 control-label">End Time</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="last_time" >
+                            </div>
+                        </div>           
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button type="button" id="btn_query" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->
@@ -135,3 +191,7 @@
 <?= $this->HTML->script('../Manage/js/common/datatable_all_page', array('block' => 'scriptBottom')) ?> 
 <?= $this->HTML->script('../Manage/js/transaction/transaction_index', array('block' => 'scriptBottom')) ?>
 <?= $this->HTML->script('../Manage/js/transaction/spin.min', array('block' => 'scriptBottom')) ?>
+<?= $this->append('scriptBottom') ?> 
+<script src="//cdn.jsdelivr.net/velocity/1.2.2/velocity.min.js"></script>
+<script src="//cdn.jsdelivr.net/velocity/1.2.2/velocity.ui.min.js"></script>
+<?= $this->end() ?>

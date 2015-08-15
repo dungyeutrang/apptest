@@ -17,6 +17,8 @@ class TransactionTable extends Table
 {
 
     public $id;
+    public $firstTime;
+    public $lastTime;
 
     /**
      * Initialize method
@@ -99,6 +101,26 @@ class TransactionTable extends Table
                 return $data;
             }
 
+            /**
+             * get data for action index by category
+             * @param type $walletId
+             */
+            public function getDataIndexByCategory($walletId)
+            {
+                $data = $this->find('all');
+                $total = $data->func()->sum('Transaction.amount');
+                $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
+                $result = $data->where(['Transaction.wallet_id' => $walletId, 'Transaction.status' => 0, 'DATE(Transaction.created_at)' => date('Y-m-d')])
+                                ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
+                return $result;
+            }
+
+            /**
+             * get data query date
+             * @param type $walletId
+             * @param type $type
+             * @return type
+             */
             public function getDataQuery($walletId, $type)
             {
                 $date = new \DateTime('now');
@@ -120,6 +142,81 @@ class TransactionTable extends Table
                             ->contain(['Wallet', 'Category', 'Category.MstCatalog']);
                 }
                 return $data;
+            }
+
+            /**
+             * get data query by category
+             * @param type $walletId
+             * @param type $type
+             * @return type
+             */
+            public function getDataQueryCategory($walletId, $type)
+            {
+                $date = new \DateTime('now');
+                if ($type == 1) {
+                    $data = $this->find('all');
+                    $total = $data->func()->sum('Transaction.amount');
+                    $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
+                    $result = $data->where(['Transaction.wallet_id' => $walletId, 'Transaction.status' => 0, 'DATE(Transaction.created_at)' => date('Y-m-d')])
+                                    ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
+                } else if ($type == 2) {
+
+                    $data = $this->find('all');
+                    $total = $data->func()->sum('Transaction.amount');
+                    $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
+                    $result = $data->where(['Transaction.wallet_id' => $walletId, 'Transaction.status' => 0, 'week(Transaction.created_at)' => $date->format('W') - 1])
+                                    ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
+                } else {
+
+                    $data = $this->find('all');
+                    $total = $data->func()->sum('Transaction.amount');
+                    $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
+                    $result = $data->where(['Transaction.wallet_id' => $walletId, 'Transaction.status' => 0, 'month(Transaction.created_at)' => date('m')])
+                                    ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
+                }
+                return $result;
+            }
+
+            /**
+             *  get data by query date
+             * @param type $walletId
+             * @param type $firstTime
+             * @param type $lastTime
+             * @return type
+             */
+            public function getDataQueryDate($walletId, $firstTime, $lastTime)
+            {
+                $this->firstTime = $firstTime;
+                $this->lastTime = $lastTime;
+                $data = $this->find()->where(['Transaction.wallet_id' => $walletId])
+                                ->andWhere(['Transaction.status' => 0])
+                                ->andWhere(function($exp) {
+                                    return $exp->between('DATE(Transaction.created_at)', $this->firstTime, $this->lastTime);
+                                })->contain(['Wallet', 'Category', 'Category.MstCatalog']);
+                return $data;
+            }
+
+            /**
+             * get data of  date by category
+             * @param type $walletId
+             * @param type $firstTime
+             * @param type $lastTime
+             * @return type
+             */
+            public function getDataQueryDateCategory($walletId, $firstTime, $lastTime)
+            {
+                $this->firstTime = $firstTime;
+                $this->lastTime = $lastTime;
+                $data = $this->find('all');
+                $total = $data->func()->sum('Transaction.amount');
+                $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
+                $result = $data->where(['Transaction.wallet_id' => $walletId, 'Transaction.status' => 0])
+                                ->andWhere(function($exp) {
+                                    return $exp->between('DATE(Transaction.created_at)', $this->firstTime, $this->lastTime);
+                                })
+                                ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
+
+                return $result;
             }
 
             /**
@@ -176,16 +273,20 @@ class TransactionTable extends Table
                 return $this->updateAll(['status' => 1], ['wallet_id' => $walletId]);
             }
 
+            /**
+             * report wallet 
+             * @param type $walletId
+             * @return type
+             */
             public function getReport($walletId)
             {
 //                $table = \Cake\ORM\TableRegistry::get('tbl_')
                 $data = $this->find('all');
                 $total = $data->func()->sum('Transaction.amount');
-                $data->select(['total'=>$total,'id','category_id','wallet_id','Category.name','Category.avatar','MstCatalog.name']);
+                $data->select(['total' => $total, 'id', 'category_id', 'wallet_id', 'Category.name', 'Category.avatar', 'MstCatalog.name']);
                 $data = $data->where(['month(Transaction.created_at)' => date('m'), 'Transaction.wallet_id' => $walletId, 'Transaction.status' => 0])
-                        ->group(['category_id'])->contain(['Category','Category.MstCatalog']);
+                                ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
                 return $data;
             }
 
         }
-        

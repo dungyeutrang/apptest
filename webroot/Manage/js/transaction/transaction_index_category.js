@@ -3,11 +3,7 @@ $(function () {
     $('.dataTables-content').dataTable({
         responsive: true,
         bPaginate: false,
-        bInfo: false,
-        aoColumnDefs: [
-            {bSortable: false, aTargets: [6]},
-            {bSortable: false, aTargets: [7]}
-        ],
+       // bInfo: false,      
         LengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         iDisplayLength: 10,
         "dom": 'T<"clear">lfrtip',
