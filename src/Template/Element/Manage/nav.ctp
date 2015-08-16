@@ -28,6 +28,7 @@
                                     <li class="divider"></li>
                                 <?php endforeach; ?>
                             <?php } ?>
+                            <li><?= $this->HTML->link('<i class="fa fa-eye"></i><span></span>&nbsp; View transaction of all wallet', ['_name' => 'all_transaction'], array('escape' => false)) ?></li>
                             <li><?= $this->HTML->link('<i class="fa fa-plus"></i><span></span>&nbsp; Add new wallet', ['_name' => 'wallet_add'], array('escape' => false)) ?></li>
                         </ul>
                 </div>

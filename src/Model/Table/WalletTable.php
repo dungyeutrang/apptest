@@ -207,6 +207,13 @@ class WalletTable extends Table
     {
         return $this->find('list')->where(['user_id'=>$userId,'status'=>0])->toArray();        
     }
-    
-    
+
+    public function getAllAmount($userId){
+
+        $data= $this->find('all')->where(['user_id'=>$userId,'status'=>0]);
+        $total =$data->func()->sum('amount');
+        $data->select(['total' => $total]);
+        return $data->first()->total;
+    }
+
 }

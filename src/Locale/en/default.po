@@ -1,0 +1,2 @@
+msgid "name"
+msgstr "my name is dungict"

@@ -1,0 +1,2 @@
+msgid "name"
+msgstr "ten toi la dungict"

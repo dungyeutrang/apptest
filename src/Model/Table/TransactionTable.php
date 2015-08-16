@@ -144,6 +144,29 @@ class TransactionTable extends Table
                 return $data;
             }
 
+            public function getDataQueryAll($userId, $type)
+            {
+                $date = new \DateTime('now');
+                if ($type == 1) {
+                    $data = $this->find()
+                            ->andWhere(['DATE(Transaction.created_at)' => date('Y-m-d')])
+                            ->andWhere(['Transaction.status' => 0])
+                            ->contain(['Wallet'=>['conditions'=>['user_id'=>$userId]], 'Category', 'Category.MstCatalog']);
+                } else if ($type == 2) {
+//                var_dump($type);die;
+                    $data = $this->find()
+                            ->andWhere(['week(Transaction.created_at)' => $date->format('W') - 1])
+                            ->andWhere(['Transaction.status' => 0])
+                            ->contain(['Wallet'=>['conditions'=>['user_id'=>$userId]], 'Category', 'Category.MstCatalog']);
+                } else {
+                    $data = $this->find()
+                            ->andWhere(['month(Transaction.created_at)' => date('m')])
+                            ->andWhere(['Transaction.status' => 0])
+                            ->contain(['Wallet'=>['conditions'=>['user_id'=>$userId]], 'Category', 'Category.MstCatalog']);
+                }
+                return $data;
+            }
+
             /**
              * get data query by category
              * @param type $walletId
@@ -194,8 +217,7 @@ class TransactionTable extends Table
                                     return $exp->between('DATE(Transaction.created_at)', $this->firstTime, $this->lastTime);
                                 })->contain(['Wallet', 'Category', 'Category.MstCatalog']);
                 return $data;
-            }
-
+            } 
             /**
              * get data of  date by category
              * @param type $walletId
@@ -287,6 +309,17 @@ class TransactionTable extends Table
                 $data = $data->where(['month(Transaction.created_at)' => date('m'), 'Transaction.wallet_id' => $walletId, 'Transaction.status' => 0])
                                 ->group(['category_id'])->contain(['Category', 'Category.MstCatalog']);
                 return $data;
+            }
+
+            /**
+             *get transaction of user
+             * @param type $userId
+             * @return type
+             */
+            public function allTransaction($userId)
+            {
+                return $this->find('all')->where(['Transaction.status' => 0])                                
+                                ->contain(['Wallet'=>['conditions'=>['user_id'=>$userId]],'Category', 'Category.MstCatalog']);
             }
 
         }

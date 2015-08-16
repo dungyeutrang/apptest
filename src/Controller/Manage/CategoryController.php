@@ -4,6 +4,7 @@ namespace App\Controller\Manage;
 
 use Cake\Core\Configure;
 use lib\UploadFile;
+use Cake\I18n\I18n;
 
 /**
  * Category Controller
@@ -33,6 +34,7 @@ class CategoryController extends AppController
      */
     public function index()
     {
+        I18n::locale('vi');
         $id = $this->request->wallet_id;
         $this->paginate = [
             'limit' => 10,

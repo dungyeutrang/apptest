@@ -41,13 +41,16 @@ use Cake\Routing\Router;
  */
 Router::defaultRouteClass('Route');
 
-Router::scope('/', function ($routes) {
+Router::scope('/:lang',array('lang'=>'en|vi|'),function ($routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-    $routes->connect('/', ['prefix' => 'Frontend', 'controller' => 'Pages', 'action' => 'display', 'home']);
+     
+//    Router::connect('/:lang/:controller/:action/*', array('lang' => ''), array('lang' => 'en|fr|'));
+
+    $routes->connect('/', ['controller' => 'Frontend/Pages', 'action' => 'display', 'home']);    
     $routes->connect('/pages/:action', ['prefix' => 'Frontend', 'controller' => 'Pages']);
     $routes->connect('/user/:action', ['prefix' => 'Frontend', 'controller' => 'TblUser']);
     $routes->connect('/register', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'add']);
@@ -85,6 +88,8 @@ Router::scope('/', function ($routes) {
         $routes->connect('/transaction/index/:wallet_id/:query_date',['controller'=>'Transaction','action'=>'query'],['_name'=>'transaction_query','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/changeview/:wallet_id/:type',['controller'=>'Transaction','action'=>'changeView'],['_name'=>'transaction_change_view','wallet_id'=>'\d+','type'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/report-monthly/:wallet_id',['controller'=>'Transaction','action'=>'report'],['_name'=>'report_monthly','wallet_id'=>'\d+','pass'=>['wallet_id']]);
+        $routes->connect('/transaction/all',['controller'=>'Transaction','action'=>'all'],['_name'=>'all_transaction']);
+        $routes->connect('/transaction/all/:query_date',['controller'=>'Transaction','action'=>'allQueryDate'],['_name'=>'all_transaction_query_date']);
         $routes->connect('/transaction/add/:wallet_id',['controller'=>'Transaction','action'=>'add'],['_name'=>'transaction_add','wallet_id'=>'\d+','pass'=>['wallet_id']]);
         $routes->connect('/transaction/edit/:id',['controller'=>'Transaction','action'=>'edit'],['_name'=>'transaction_update','id'=>'\d+']);
         $routes->connect('/transaction/delete/:id',['controller'=>'Transaction','action'=>'delete'],['_name'=>'transaction_delete','id'=>'\d+']);        

@@ -84,9 +84,9 @@ class TransactionController extends AppController
             $this->set('queryDate', $query);
             $this->set('dataWallet', $dataWallet);
             $sessionType = $this->request->session()->read('type');
-            if (is_null($sessionType) || $sessionType == 1) {                
+            if (is_null($sessionType) || $sessionType == 1) {
                 if ($type == 4) {
-                    $dataQuery = explode("-to-",$query);
+                    $dataQuery = explode("-to-", $query);
                     $trans = $this->Transaction->getDataQueryDate($walletId, $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
@@ -96,7 +96,7 @@ class TransactionController extends AppController
                 return $this->render('query_ajax');
             } else {
                 if ($type == 4) {
-                    $dataQuery = explode("-to-",$query);
+                    $dataQuery = explode("-to-", $query);
                     $trans = $this->Transaction->getDataQueryDateCategory($walletId, $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
@@ -117,7 +117,7 @@ class TransactionController extends AppController
             $sessionType = $this->request->session()->read('type');
             if (is_null($sessionType) || $sessionType == 1) {
                 if ($type == 4) {
-                    $dataQuery = explode("-to-",$query);
+                    $dataQuery = explode("-to-", $query);
                     $trans = $this->Transaction->getDataQueryDate($walletId, $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
@@ -127,7 +127,7 @@ class TransactionController extends AppController
                 return $this->render('query');
             } else {
                 if ($type == 4) {
-                    $dataQuery = explode("-to-",$query);
+                    $dataQuery = explode("-to-", $query);
                     $trans = $this->Transaction->getDataQueryDateCategory($walletId, $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
@@ -396,6 +396,115 @@ class TransactionController extends AppController
 //        $wallet = $this->Wallet->getWalletForTransfer($walletId, $this->Auth->user('id'));
         $this->set(compact('tblCategory', 'walletId', 'transaction', 'allWallet'));
         $this->set('_serialize', ['transaction']);
+    }
+
+    /**
+     * get all transaction
+     * @return type
+     */
+    public function all()
+    {
+        $this->paginate = [
+            'limit' => 10,
+            'order' => [
+                'Category.name' => 'asc'
+            ],
+        ];
+        $amount = $this->Wallet->getAllAmount($this->Auth->user('id'));
+        $data = $this->Transaction->allTransaction($this->Auth->user('id'));
+        $sessionType = $this->request->session()->read('type');
+        $this->set('amount', $amount);
+        if (is_null($sessionType) || $sessionType == 1) {
+            $this->set('transactions', $this->paginate($data));
+            $this->set('_serialize', ['transactions']);
+            return $this->render('all');
+        } else {
+            $this->set('transactions', $this->paginate($data));
+            $this->set('_serialize', ['transactions']);
+            return $this->render('all_category');
+        }
+    }
+
+    /**
+     * action query date
+     * @return type
+     */
+    public function allQueryDate()
+    {
+        $query = $this->request->query_date;
+        $this->paginate = [
+            'limit' => 2,
+            'order' => [
+                'Category.name' => 'asc'
+            ],
+        ];
+        if (strtolower($query) == "today") {
+            $type = 1;
+        } else if (strtolower($query) == "this-week") {
+            $type = 2;
+        } else if (strtolower($query) == "this-month") {
+            $type = 3;
+        } else {
+            $type = 4;
+        }
+
+        if ($this->request->is(['ajax', 'post'])) {
+            $this->layout = "/Manage/ajax";
+            $this->set('queryDate', $query);
+            $sessionType = $this->request->session()->read('type');
+            if (is_null($sessionType) || $sessionType == 1) {
+                if ($type == 4) {
+                    $dataQuery = explode("-to-", $query);
+                    $trans = $this->Transaction->getDataQueryDate($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
+                    $this->set('transactions', $this->paginate($trans));
+                } else {
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryAll($this->Auth->user('id'), $type)));
+                }
+                $this->set('_serialize', ['transactions']);
+                return $this->render('query_ajax_all');
+            } else {
+                if ($type == 4) {
+                    $dataQuery = explode("-to-", $query);
+                    $trans = $this->Transaction->getDataQueryDateCategory($dataQuery[0], $dataQuery[1]);
+                    $this->set('transactions', $this->paginate($trans));
+                } else {
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategory($type)));
+                }
+                $this->set('_serialize', ['transactions']);
+                return $this->render('query_ajax_category');
+            }
+        } else {
+
+            if (is_null($dataWallet)) {
+                $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+                $this->redirect(['_name' => 'wallet']);
+            }
+            $this->set('walletId', $walletId);
+            $this->set('queryDate', $query);
+            $this->set('dataWallet', $dataWallet);
+            $sessionType = $this->request->session()->read('type');
+            if (is_null($sessionType) || $sessionType == 1) {
+                if ($type == 4) {
+                    $dataQuery = explode("-to-", $query);
+                    $trans = $this->Transaction->getDataQueryDate($walletId, $dataQuery[0], $dataQuery[1]);
+                    $this->set('transactions', $this->paginate($trans));
+                } else {
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
+                }
+                $this->set('_serialize', ['transactions']);
+                return $this->render('query');
+            } else {
+                if ($type == 4) {
+                    $dataQuery = explode("-to-", $query);
+                    $trans = $this->Transaction->getDataQueryDateCategory($walletId, $dataQuery[0], $dataQuery[1]);
+                    $this->set('transactions', $this->paginate($trans));
+                } else {
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategory($walletId, $type)));
+                }
+                $this->set('_serialize', ['transactions']);
+                return $this->render('query_category');
+            }
+        }
     }
 
 }
