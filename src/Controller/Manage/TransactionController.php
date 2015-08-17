@@ -249,14 +249,15 @@ class TransactionController extends AppController
                 $transaction->updated_at = new DateTime('now');
                 try {
                     if ($this->Transaction->save($transaction)) {
+                        $catalog =$this->Category->getCatalogId($transaction->category_id) ;
                         if ($transaction->category_id == $oldCategory) {
-                            if ($this->Category->getCatalogId($transaction->category_id) == 1) {
+                            if ( $catalog== 1) {
                                 $dataWallet->amount = $dataWallet->amount + $transaction->amount - $amountOld;
                             } else {
                                 $dataWallet->amount = $dataWallet->amount - ($transaction->amount - $amountOld);
                             }
                         } else {
-                            if ($this->Category->getCatalogId($transaction->category_id) == 1) {
+                            if ($catalog == 1) {
                                 $dataWallet->amount = $dataWallet->amount + $transaction->amount + $amountOld;
                             } else {
                                 $dataWallet->amount = $dataWallet->amount - ($transaction->amount + $amountOld);
