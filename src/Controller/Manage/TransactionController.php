@@ -12,7 +12,7 @@ use DateTime;
  */
 class TransactionController extends AppController
 {
-
+    
     public function initialize()
     {
         parent::initialize();
@@ -32,7 +32,7 @@ class TransactionController extends AppController
     {
         $walletId = $this->request->wallet_id;
         $this->paginate = [
-            'limit' => 10,
+            'limit' => $this->limit,
             'order' => [
                 'Category.name' => 'asc'
             ],
@@ -62,7 +62,7 @@ class TransactionController extends AppController
         $query = $this->request->query_date;
         $walletId = $this->request->wallet_id;
         $this->paginate = [
-            'limit' => 2,
+            'limit' => $this->limit,
             'order' => [
                 'Category.name' => 'asc'
             ],
@@ -186,6 +186,10 @@ class TransactionController extends AppController
                     $this->Transaction->connection()->commit();
                     $this->Flash->success(__(Configure::read('message.add_transaction_success')));
                     return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+                } else {
+                    $this->Transaction->connection()->rollback();
+                    $this->Flash->error(__(Configure::read('message.add_transaction_fail')));
+                    return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
                 }
             } catch (Exception $ex) {
                 $this->Transaction->connection()->rollback();
@@ -198,6 +202,9 @@ class TransactionController extends AppController
         $this->set('_serialize', ['transaction']);
     }
 
+    /**
+     * get category for add method
+     */
     public function getData()
     {
         $response = array();
@@ -258,6 +265,10 @@ class TransactionController extends AppController
                         $this->Wallet->save($dataWallet);
                         $this->Transaction->connection()->commit();
                         $this->Flash->success(__(Configure::read('message.update_transaction_success')));
+                        return $this->redirect(['action' => 'index', 'wallet_id' => $transaction->wallet_id]);
+                    } else {
+                        $this->Transaction->connection()->rollback();
+                        $this->Flash->error(__(Configure::read('message.update_transaction_fail')));
                         return $this->redirect(['action' => 'index', 'wallet_id' => $transaction->wallet_id]);
                     }
                 } catch (Exception $ex) {
@@ -320,12 +331,21 @@ class TransactionController extends AppController
                 $this->Transaction->connection()->commit();
                 $this->Flash->success(__(Configure::read('message.delete_transaction_success')));
                 return $this->redirect(['action' => 'index', 'wallet_id' => $transaction->wallet_id]);
+            } else {
+
+                $this->Transaction->connection()->rollback();
+                $this->Flash->error(__(Configure::read('message.delete_transaction_fail')));
+                return $this->redirect(['action' => 'index', 'wallet_id' => $transaction->wallet_id]);
             }
         } catch (Exception $ex) {
+            $this->Transaction->connection()->rollback();
             $this->Flash->error(__(Configure::read('message.delete_transaction_fail')));
         }
     }
 
+    /**
+     * action report show report monthly
+     */
     public function report()
     {
         $walletId = $this->request->wallet_id;
@@ -335,12 +355,88 @@ class TransactionController extends AppController
             $this->redirect(['_name' => 'wallet']);
         }
         $this->paginate = [
-            'limit' => 10,
+            'limit' => $this->limit,
             'contain' => ['Wallet', 'Category']
         ];
+        $expense = $this->Transaction->getExpenseThisMonth($walletId);
+        $totalExpense = 0;
+        $data = array(); // storage data for display chart
+        $count = count($expense);
+        for ($i = 0; $i < $count; $i++) {
+            $totalExpense+=$expense[$i]->total;
+            $data[$i]['label'] = $expense[$i]->category->name;
+            $data[$i]['data'] = $expense[$i]->total;
+        }
+        $this->set('data', json_encode($data));
+        $this->set('total', $totalExpense);
+        $this->set('expense', $expense);
         $this->set('dataWallet', $dataWallet);
         $this->set('transactions', $this->paginate($this->Transaction->getReport($walletId)));
         $this->set('_serialize', ['transactions']);
+    }
+
+    public function reportQuery()
+    {
+        $this->paginate = [
+            'limit' => $this->limit,
+            'contain' => ['Wallet', 'Category']
+        ];
+        $query = $this->request->query_date;
+        $date = date_create($query);
+        $month = date_format($date, "m");
+        $year = date_format($date, "Y");
+        $walletId = $this->request->wallet_id;
+        $dataWallet = $this->Wallet->checkExist($walletId);
+        if ($this->request->is(['ajax', 'post'])) {
+            $this->layout = "/Manage/report";
+            if (!is_null($dataWallet)) {
+                $data = $this->Transaction->getReportByMonth($month, $year, $walletId);
+                $this->set('transactions', $this->paginate($data));
+                $this->set('query', $query);
+                $this->set('walletId', $walletId);
+                $this->set('_serialize', ['transactions']);
+
+                $expense = $this->Transaction->getExpenseByMonth($walletId, $month, $year);
+                $totalExpense = 0;
+                $dataExpense = array(); // storage data for display chart
+                $count = count($expense);
+                for ($i = 0; $i < $count; $i++) {
+                    $totalExpense+=$expense[$i]->total;
+                    $dataExpense[$i]['label'] = $expense[$i]->category->name;
+                    $dataExpense[$i]['data'] = $expense[$i]->total;
+                }
+                $this->set('data', json_encode($dataExpense));
+                $this->set('total', $totalExpense);
+                $this->set('expense', $expense);
+                $this->set('dataWallet', $dataWallet);
+                return $this->render('report_ajax');
+            }
+        } else {
+            if (is_null($dataWallet)) {
+                $this->Flash->error(__(Configure::read('message.wallet_not_found')));
+                $this->redirect(['_name' => 'wallet']);
+            }
+            $data = $this->Transaction->getReportByMonth($month, $year, $walletId);
+            $this->set('transactions', $this->paginate($data));
+            $this->set('query', $query);
+            $this->set('walletId', $walletId);
+            $this->set('_serialize', ['transactions']);
+
+            $expense = $this->Transaction->getExpenseByMonth($walletId, $month, $year);
+            $totalExpense = 0;
+            $dataExpense = array(); // storage data for display chart
+            $count = count($expense);
+            for ($i = 0; $i < $count; $i++) {
+                $totalExpense+=$expense[$i]->total;
+                $dataExpense[$i]['label'] = $expense[$i]->category->name;
+                $dataExpense[$i]['data'] = $expense[$i]->total;
+            }
+            $this->set('data', json_encode($dataExpense));
+            $this->set('total', $totalExpense);
+            $this->set('expense', $expense);
+            $this->set('dataWallet', $dataWallet);
+            return $this->render('report_query');
+        }
     }
 
     public function transfer()
@@ -384,6 +480,10 @@ class TransactionController extends AppController
                     $this->Transaction->connection()->commit();
                     $this->Flash->success(__(Configure::read('message.add_transaction_success')));
                     return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
+                } else {
+                    $this->Transaction->connection()->rollback();
+                    $this->Flash->error(__(Configure::read('message.add_transaction_fail')));
+                    return $this->redirect(['action' => 'index', 'wallet_id' => $walletId]);
                 }
             } catch (Exception $ex) {
                 $this->Transaction->connection()->rollback();
@@ -405,20 +505,21 @@ class TransactionController extends AppController
     public function all()
     {
         $this->paginate = [
-            'limit' => 10,
+            'limit' => $this->limit,
             'order' => [
                 'Category.name' => 'asc'
             ],
         ];
         $amount = $this->Wallet->getAllAmount($this->Auth->user('id'));
-        $data = $this->Transaction->allTransaction($this->Auth->user('id'));
         $sessionType = $this->request->session()->read('type');
         $this->set('amount', $amount);
         if (is_null($sessionType) || $sessionType == 1) {
+            $data = $this->Transaction->allTransaction($this->Auth->user('id'));
             $this->set('transactions', $this->paginate($data));
             $this->set('_serialize', ['transactions']);
             return $this->render('all');
         } else {
+            $data = $this->Transaction->allTransactionCategory($this->Auth->user('id'));
             $this->set('transactions', $this->paginate($data));
             $this->set('_serialize', ['transactions']);
             return $this->render('all_category');
@@ -433,7 +534,7 @@ class TransactionController extends AppController
     {
         $query = $this->request->query_date;
         $this->paginate = [
-            'limit' => 2,
+            'limit' => $this->limit,
             'order' => [
                 'Category.name' => 'asc'
             ],
@@ -455,7 +556,7 @@ class TransactionController extends AppController
             if (is_null($sessionType) || $sessionType == 1) {
                 if ($type == 4) {
                     $dataQuery = explode("-to-", $query);
-                    $trans = $this->Transaction->getDataQueryDate($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
+                    $trans = $this->Transaction->getDataQueryDateAll($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
                     $this->set('transactions', $this->paginate($this->Transaction->getDataQueryAll($this->Auth->user('id'), $type)));
@@ -465,46 +566,54 @@ class TransactionController extends AppController
             } else {
                 if ($type == 4) {
                     $dataQuery = explode("-to-", $query);
-                    $trans = $this->Transaction->getDataQueryDateCategory($dataQuery[0], $dataQuery[1]);
+                    $trans = $this->Transaction->getDataQueryDateCategoryAll($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
-                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategory($type)));
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategoryAll($this->Auth->user('id'), $type)));
                 }
                 $this->set('_serialize', ['transactions']);
-                return $this->render('query_ajax_category');
+                return $this->render('query_ajax_category_all');
             }
         } else {
-
-            if (is_null($dataWallet)) {
-                $this->Flash->error(__(Configure::read('message.wallet_not_found')));
-                $this->redirect(['_name' => 'wallet']);
-            }
-            $this->set('walletId', $walletId);
             $this->set('queryDate', $query);
-            $this->set('dataWallet', $dataWallet);
+            $amount = $this->Wallet->getAllAmount($this->Auth->user('id'));
             $sessionType = $this->request->session()->read('type');
+            $this->set('amount', $amount);
             if (is_null($sessionType) || $sessionType == 1) {
                 if ($type == 4) {
                     $dataQuery = explode("-to-", $query);
-                    $trans = $this->Transaction->getDataQueryDate($walletId, $dataQuery[0], $dataQuery[1]);
+                    $trans = $this->Transaction->getDataQueryDateAll($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
-                    $this->set('transactions', $this->paginate($this->Transaction->getDataQuery($walletId, $type)));
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryAll($this->Auth->user('id'), $type)));
                 }
                 $this->set('_serialize', ['transactions']);
-                return $this->render('query');
+                return $this->render('query_all');
             } else {
                 if ($type == 4) {
                     $dataQuery = explode("-to-", $query);
-                    $trans = $this->Transaction->getDataQueryDateCategory($walletId, $dataQuery[0], $dataQuery[1]);
+                    $trans = $this->Transaction->getDataQueryDateCategoryAll($this->Auth->user('id'), $dataQuery[0], $dataQuery[1]);
                     $this->set('transactions', $this->paginate($trans));
                 } else {
-                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategory($walletId, $type)));
+                    $this->set('transactions', $this->paginate($this->Transaction->getDataQueryCategoryAll($this->Auth->user('id'), $type)));
                 }
                 $this->set('_serialize', ['transactions']);
-                return $this->render('query_category');
+                return $this->render('query_all_category');
             }
         }
+    }
+
+    /**
+     * change display all transaction
+     */
+    public function changeAllView()
+    {
+        if ($this->request->type == 1) {
+            $this->request->session()->write("type", 1);
+        } else {
+            $this->request->session()->write("type", 2);
+        }
+        $this->redirect(['action' => 'all']);
     }
 
 }

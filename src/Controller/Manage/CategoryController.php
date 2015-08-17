@@ -19,7 +19,6 @@ class CategoryController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('Wallet');
         $this->loadModel('MstCatalog');
         $this->loadModel('CategoryDelete');
         $this->loadModel('Transaction');
@@ -89,9 +88,9 @@ class CategoryController extends AppController
         if ($this->request->is('post')) {
             $this->request->data['wallet_id'] = $id;
             $category = $this->Category->patchEntity($category, $this->request->data);
-            $category->avatar=Configure::read('constant.category_default_url');            
+            $category->avatar = Configure::read('constant.category_default_url');
             if ($this->Category->save($category)) {
-                if (!empty($this->request->data['avatar']['name'])){
+                if (!empty($this->request->data['avatar']['name'])) {
                     $dirUpload = '/Uploads' . '/' . $this->Auth->user('id');
                     $this->upload->addDir($dirUpload);
                     $filename = $this->request->data['avatar']['name'];
@@ -100,7 +99,7 @@ class CategoryController extends AppController
                     move_uploaded_file($this->request->data['avatar']['tmp_name'], BASE_URL . $avatar);
                     $category->avatar = $avatar;
                     $this->Category->save($category);
-                }                
+                }
                 $this->Flash->success(__(Configure::read('message.add_category_success')));
                 return $this->redirect(['_name' => 'category', 'wallet_id' => $id]);
             } else {
@@ -136,6 +135,9 @@ class CategoryController extends AppController
         }
     }
 
+    /**
+     * get category for update method
+     */
     public function getDataUpdate()
     {
 

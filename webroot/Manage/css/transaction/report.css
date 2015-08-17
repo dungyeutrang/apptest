@@ -1,0 +1,39 @@
+form{
+    width: 200px;
+}
+#btn_search_month{
+    background-color: #24ad29;
+    color: white;
+    border: 1px;
+    border-radius: 0px 3px 3px 0px;
+}
+.expense{
+    padding: 0 15px;
+}
+.pieLabel{
+    font-weight: bold;
+}
+.pieLabel div{
+    font-size: 12px !important;
+
+}
+#expense{
+    padding-top: 20px;
+    border: 1px solid #DDE8DF;
+    margin: 20px 0px;
+}
+
+.ui-datepicker-calendar {
+    display: none;
+}
+.ui-datepicker-month{
+    margin: 0px 5px 0px 5px !important;
+    border-radius: 3px;
+    border: 1px solid #B5BBB5;
+    height: 25px;
+}
+.ui-datepicker-year{
+    border-radius: 3px;
+    border: 1px solid #B5BBB5;
+    height: 25px;
+}

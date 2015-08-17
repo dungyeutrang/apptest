@@ -39,7 +39,6 @@
             <?php if ($wallet_id) { ?> 
                 <li class="active"><?= $this->HTML->link('<i class="fa fa-list"></i><span class="nav-label">Transaction</span>', ['_name' => 'transaction', 'wallet_id' => $wallet_id], array("escape" => false)) ?></li>
                 <li><?= $this->HTML->link('<i class="fa fa-list"></i><span class="nav-label">Category</span>', ['_name' => 'category', 'wallet_id' => $wallet_id], array("escape" => false)) ?></li>           
-                <li><?= $this->HTML->link('<i class="fa fa-list"></i><span class="nav-label">Status</span>', ['_name' => 'wallet_expense', 'wallet_id' => $wallet_id], array("escape" => false)) ?></li>           
                 <li><?= $this->HTML->link('<i class="fa fa-list"></i><span class="nav-label">Report Monthly</span>', ['_name' => 'report_monthly', 'wallet_id' => $wallet_id], array("escape" => false)) ?></li>
                 <li>
                 <a href="#"><i class="fa fa-refresh"></i> <span class="nav-label">Perform</span><span class="fa arrow"></span></a>

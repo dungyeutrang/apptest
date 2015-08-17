@@ -10,7 +10,7 @@
                             }
                         },
                         legend: {
-                            show: true
+                            show: false
                         }
                     });
         }

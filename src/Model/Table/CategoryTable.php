@@ -64,7 +64,6 @@ class CategoryTable extends Table
                 ->add('catalog_id', 'valid', ['rule' => 'numeric'])
                 ->requirePresence('catalog_id', 'create')
                 ->notEmpty('catalog_id');
-
         $validator
                 ->add('parent_id', 'valid', ['rule' => 'numeric'])
                 ->add('parent_id', 'custom', ['rule' => function ($value) {
@@ -76,17 +75,13 @@ class CategoryTable extends Table
                         }
                     }])
                         ->allowEmpty('parent_id');
-
                 $validator
                         ->add('avatar', 'file', ['rule' => array('mimeType', array('image/gif', 'image/png', 'image/jpg', 'image/jpeg')), 'message' => 'Type of image invalid'])
                         ->requirePresence('avatar', 'create')
                         ->allowEmpty('avatar');
-
-
                 $validator
                         ->requirePresence('name', 'create')
                         ->notEmpty('name');
-
                 return $validator;
             }
 
@@ -381,7 +376,7 @@ class CategoryTable extends Table
             public function deleteCategory($walletId)
             {
                 return $this->updateAll(['status' => 1], ['wallet_id' => $walletId]);
-            }                   
+            }
 
         }
         

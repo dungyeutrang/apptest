@@ -77,3 +77,18 @@ form{
     border-radius: 6px;
     padding: 0px;
 }
+
+#input_search_date{
+    background-image: none;
+    border: 1px solid #D8DBDE;
+    border-radius: 1px;
+    color: inherit;
+    /* display: block; */
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    /* width: 100%; */
+    font-size: 14px;
+    margin-left: 15px;
+    height: 30px;
+    width: 160px;
+}

@@ -98,8 +98,9 @@ class TblUserController extends AppController
      * logout user
      */
     public function logout()
-    {
-        return $this->redirect($this->Auth->logout());
+    {   
+        $this->Auth->logout();
+        return $this->redirect('/');
     }
 
     /**

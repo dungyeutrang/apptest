@@ -84,7 +84,6 @@
 <?php if ($this->Paginator->hasPage(2)): ?>
                         <nav class="pull-right" id="nav-pagination">
                             <ul class="pagination">
-
                                     <?=
                                 $this->Paginator->options(array(
                                     'url' => array(
@@ -94,7 +93,6 @@
                                     )
                                 ));
                                 ?>
-
                                 <?= $this->Paginator->prev('« Previous') ?>
                                 <?= $this->Paginator->numbers() ?>
     <?= $this->Paginator->next('Next »') ?>
@@ -132,7 +130,6 @@
     </div>
 </div>
 <!-- modal change time -->
-
 <div id="myModal10" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="opacity: 1; display: block; transform: scaleX(1) scaleY(1);">
         <div class="modal-content">
@@ -165,7 +162,6 @@
         </div>
     </div>
 </div>
-
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->

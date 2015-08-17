@@ -205,7 +205,7 @@ class WalletTable extends Table
      */    
     public function getWalletOfUser($userId)
     {
-        return $this->find('list')->where(['user_id'=>$userId,'status'=>0])->toArray();        
+        return $this->find('list')->where(['user_id'=>$userId,'status'=>0])->toArray();
     }
 
     public function getAllAmount($userId){

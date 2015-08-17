@@ -44,7 +44,7 @@
                 </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if(!$user){ ?>
-                <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-heart-o fa-lg"></i></a></li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
              <?php }else{ ?>
                 <li class="dropdown"><a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Hi!&nbsp;<?php echo $user['last_name'].$user['first_name'] ?> <span class="caret"></a>
                    <ul class="dropdown-menu">

@@ -56,6 +56,11 @@ use Cake\Utility\Security;
 use Cake\Routing\Filter\AssetFilter;
 
 
+use App\Error\AppError;
+
+$errorHandler = new AppError();
+$errorHandler->register();
+
 Configure::load('setting_message_frontend');
 Configure::load('setting_message_backend');
 Configure::load('constant_backend');

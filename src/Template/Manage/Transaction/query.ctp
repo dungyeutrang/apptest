@@ -100,7 +100,6 @@
 <?php if ($this->Paginator->hasPage(2)): ?>
                         <nav class="pull-right" id="nav-pagination">
                             <ul class="pagination">
-
                                 <?=
                                 $this->Paginator->options(array(
                                     'url' => array(
@@ -110,7 +109,6 @@
                                     )
                                 ));
                                 ?>
-
     <?= $this->Paginator->prev('« Previous') ?>
                                 <?= $this->Paginator->numbers() ?>
                                 <?= $this->Paginator->next('Next »') ?>

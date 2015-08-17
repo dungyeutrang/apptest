@@ -10,6 +10,8 @@ use Cake\Controller\Controller;
 class AppController extends Controller
 {
 
+    public $limit=10;
+    
     public function initialize()
     {
         parent::initialize();

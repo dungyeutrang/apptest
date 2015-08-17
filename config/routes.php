@@ -41,16 +41,15 @@ use Cake\Routing\Router;
  */
 Router::defaultRouteClass('Route');
 
-Router::scope('/:lang',array('lang'=>'en|vi|'),function ($routes) {
+Router::scope('/', function ($routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-     
 //    Router::connect('/:lang/:controller/:action/*', array('lang' => ''), array('lang' => 'en|fr|'));
 
-    $routes->connect('/', ['controller' => 'Frontend/Pages', 'action' => 'display', 'home']);    
+    $routes->connect('/', ['controller' => 'Frontend/Pages', 'action' => 'display', 'home']);
     $routes->connect('/pages/:action', ['prefix' => 'Frontend', 'controller' => 'Pages']);
     $routes->connect('/user/:action', ['prefix' => 'Frontend', 'controller' => 'TblUser']);
     $routes->connect('/register', ['prefix' => 'Frontend', 'controller' => 'TblUser', 'action' => 'add']);
@@ -70,31 +69,35 @@ Router::scope('/:lang',array('lang'=>'en|vi|'),function ($routes) {
         $routes->connect('/wallet/add-wallet', ['controller' => 'Wallet', 'action' => 'add'], ['_name' => 'wallet_add']);
         $routes->connect('/wallet/edit-wallet/:wallet_id', ['controller' => 'Wallet', 'action' => 'edit'], ['_name' => 'wallet_edit', 'id' => '\d+']);
         $routes->connect('/wallet/delete/:wallet_id', ['controller' => 'Wallet', 'action' => 'delete'], ['_name' => 'wallet_delete', 'id' => '\d+']);
-        $routes->connect('/wallet/expense/:wallet_id', ['controller' => 'Wallet', 'action' => 'expense'], ['_name' => 'wallet_expense','wallet_id'=>'\d+']);
-        $routes->connect('/wallet/transfer/:wallet_id', ['controller' => 'Transaction', 'action' => 'transfer'], ['_name' => 'wallet_transfer','wallet_id'=>'\d+']);
-        
+        $routes->connect('/wallet/expense/:wallet_id', ['controller' => 'Wallet', 'action' => 'expense'], ['_name' => 'wallet_expense', 'wallet_id' => '\d+']);
+        $routes->connect('/wallet/transfer/:wallet_id', ['controller' => 'Transaction', 'action' => 'transfer'], ['_name' => 'wallet_transfer', 'wallet_id' => '\d+']);
+
         // manage category
         $routes->connect('/category/index/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         $routes->connect('/category/:wallet_id', ['controller' => 'Category', 'action' => 'index'], ['_name' => 'category', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         $routes->connect('/category/add/:wallet_id', ['controller' => 'Category', 'action' => 'add'], ['_name' => 'category_add', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
-        $routes->connect('/category/getdata/:wallet_id', ['controller' => 'Category', 'action' => 'getData'], ['_name' => 'category_get_data','wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/category/getdata/:wallet_id', ['controller' => 'Category', 'action' => 'getData'], ['_name' => 'category_get_data', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         $routes->connect('/category/edit/:id', ['controller' => 'Category', 'action' => 'edit'], ['_name' => 'category_edit', 'id' => '\d+']);
-        $routes->connect('/category/getdataupdate/:id/:parent_id/:wallet_id', ['controller' => 'Category', 'action' => 'getDataUpdate'], ['_name' => 'category_get_data_update', 'id' => '\d+','parent_id' => '\d+','wallet_id' => '\d+']);        
-        $routes->connect('/category/delete/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'delete'], ['_name' => 'category_delete', 'id' => '\d+','wallet_id' => '\d+','pass' => ['wallet_id']]);
-        $routes->connect('/category/check/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'check'], ['_name' => 'category_check', 'id' => '\d+','wallet_id' => '\d+','pass' => ['wallet_id']]);
-         
+        $routes->connect('/category/getdataupdate/:id/:parent_id/:wallet_id', ['controller' => 'Category', 'action' => 'getDataUpdate'], ['_name' => 'category_get_data_update', 'id' => '\d+', 'parent_id' => '\d+', 'wallet_id' => '\d+']);
+        $routes->connect('/category/delete/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'delete'], ['_name' => 'category_delete', 'id' => '\d+', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/category/check/wallet-:wallet_id/:id', ['controller' => 'Category', 'action' => 'check'], ['_name' => 'category_check', 'id' => '\d+', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+
         // manage transaction
-        $routes->connect('/transaction/index/:wallet_id',['controller'=>'Transaction','action'=>'index'],['_name'=>'transaction','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-        $routes->connect('/transaction/index/:wallet_id/:query_date',['controller'=>'Transaction','action'=>'query'],['_name'=>'transaction_query','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-        $routes->connect('/transaction/changeview/:wallet_id/:type',['controller'=>'Transaction','action'=>'changeView'],['_name'=>'transaction_change_view','wallet_id'=>'\d+','type'=>'\d+','pass'=>['wallet_id']]);
-        $routes->connect('/transaction/report-monthly/:wallet_id',['controller'=>'Transaction','action'=>'report'],['_name'=>'report_monthly','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-        $routes->connect('/transaction/all',['controller'=>'Transaction','action'=>'all'],['_name'=>'all_transaction']);
-        $routes->connect('/transaction/all/:query_date',['controller'=>'Transaction','action'=>'allQueryDate'],['_name'=>'all_transaction_query_date']);
-        $routes->connect('/transaction/add/:wallet_id',['controller'=>'Transaction','action'=>'add'],['_name'=>'transaction_add','wallet_id'=>'\d+','pass'=>['wallet_id']]);
-        $routes->connect('/transaction/edit/:id',['controller'=>'Transaction','action'=>'edit'],['_name'=>'transaction_update','id'=>'\d+']);
-        $routes->connect('/transaction/delete/:id',['controller'=>'Transaction','action'=>'delete'],['_name'=>'transaction_delete','id'=>'\d+']);        
-        $routes->connect('/transaction/getdata/:wallet_id', ['controller' => 'Transaction', 'action' => 'getData'], ['_name' => 'transaction_get_data','wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/index/:wallet_id', ['controller' => 'Transaction', 'action' => 'index'], ['_name' => 'transaction', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/index/:wallet_id/:query_date', ['controller' => 'Transaction', 'action' => 'query'], ['_name' => 'transaction_query', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/changeview/:wallet_id/:type', ['controller' => 'Transaction', 'action' => 'changeView'], ['_name' => 'transaction_change_view', 'wallet_id' => '\d+', 'type' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/changeview/:type', ['controller' => 'Transaction', 'action' => 'changeAllView'], ['_name' => 'transaction_all_change_view', 'type' => '\d+']);
+        $routes->connect('/transaction/report-monthly/:wallet_id', ['controller' => 'Transaction', 'action' => 'report'], ['_name' => 'report_monthly', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/report-monthly/:wallet_id/:query_date', ['controller' => 'Transaction', 'action' => 'reportQuery'], ['_name' => 'report_monthly_query', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
         
+        $routes->connect('/transaction/all', ['controller' => 'Transaction', 'action' => 'all'], ['_name' => 'all_transaction']);
+        $routes->connect('/transaction/all/:query_date', ['controller' => 'Transaction', 'action' => 'allQueryDate'], ['_name' => 'all_transaction_query_date']);
+        
+        $routes->connect('/transaction/add/:wallet_id', ['controller' => 'Transaction', 'action' => 'add'], ['_name' => 'transaction_add', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+        $routes->connect('/transaction/edit/:id', ['controller' => 'Transaction', 'action' => 'edit'], ['_name' => 'transaction_update', 'id' => '\d+']);
+        $routes->connect('/transaction/delete/:id', ['controller' => 'Transaction', 'action' => 'delete'], ['_name' => 'transaction_delete', 'id' => '\d+']);
+        $routes->connect('/transaction/getdata/:wallet_id', ['controller' => 'Transaction', 'action' => 'getData'], ['_name' => 'transaction_get_data', 'wallet_id' => '\d+', 'pass' => ['wallet_id']]);
+
         $routes->fallbacks('InflectedRoute');
     });
 

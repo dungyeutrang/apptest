@@ -1,10 +1,8 @@
-<?=
-
-$this->HTML->link('Add', ['_name' => 'transaction_add', 'wallet_id' => $walletId], ['id' => 'add-new-record', 'class' => 'btn btn-primary col-sm-2 col-md-2 col-lg-1 col-xs-2']) ?>
 <table id="main" class="table table-striped table-bordered table-hover dataTables-content" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
             <th><?= $this->Paginator->sort('id') ?></th>
+            <th><?= $this->Paginator->sort('wallet') ?></th>
             <th><?= $this->Paginator->sort('category') ?></th>
             <th><?= $this->Paginator->sort('type') ?></th>
             <th><?= $this->Paginator->sort('amount') ?></th>
@@ -14,11 +12,12 @@ $this->HTML->link('Add', ['_name' => 'transaction_add', 'wallet_id' => $walletId
         <?php $i=1; foreach ($transactions as $transaction): ?>
         <tr>
             <td><?= $i++ ?></td>
+            <td><?= $transaction->wallet->name ?></td>
             <td>   <?= $this->HTML->image($transaction->category->avatar,array('class'=>'circle icon-category')); ?> &nbsp; <?= h($transaction->category->name); ?></td>
             <td><?= $transaction->category->mst_catalog->name ?></td>
             <td><?= $this->Number->format($transaction->total) ?></td>
         </tr>
-        <?php endforeach; ?>
+          <?php endforeach; ?>
     </tbody>
 </table>
 <!-- PAGINATION-->
@@ -29,8 +28,7 @@ $this->HTML->link('Add', ['_name' => 'transaction_add', 'wallet_id' => $walletId
                 <?=
                 $this->Paginator->options(array(
                     'url' => array(
-                        '_name' => 'transaction_query',
-                        'wallet_id' => $walletId,
+                        '_name' => 'all_transaction_query_date',
                         'query_date' => $queryDate
                     )
                 ));

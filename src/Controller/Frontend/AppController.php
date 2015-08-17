@@ -17,7 +17,6 @@
 namespace App\Controller\Frontend;
 
 use Cake\Controller\Controller;
-use Cake\Routing\Router;
 
 /**
  * Application Controller
@@ -59,13 +58,7 @@ class AppController extends Controller
                     ],
                     'userModel' => 'TblUser'
                 ]
-            ],
-            'logoutRedirect' => [
-                'prefix' => 'Frontend',
-                'controller' => 'Pages',
-                'action' => 'display',
-                'home'
-            ]
+            ],          
         ]);
         $this->set('user', $this->Auth->user());
         if ($this->Auth->user()) {

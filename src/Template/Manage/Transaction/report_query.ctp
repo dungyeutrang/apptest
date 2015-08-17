@@ -1,4 +1,4 @@
-<?= $this->HTML->css('/Manage/css/common/datatable_all_page', ['block' => 'css_header']) ?>
+<?=$this->HTML->css('/Manage/css/common/datatable_all_page', ['block' => 'css_header']) ?>
 <?= $this->HTML->css('/Manage/css/transaction/index', ['block' => 'css_header']) ?>
 <?= $this->HTML->css('/Manage/css/transaction/report', ['block' => 'css_header']) ?>
 <!-- Data table CSS -->
@@ -32,7 +32,7 @@
             <div class="ibox-title">
                 <h5 id="title-balance"><b>Balance: <?= $this->Number->format($dataWallet->amount) ?></b>  
                     <?= $this->Form->create(null) ?> 
-                    <div class="input-group col-sm-4"> 
+                    <div class="input-group col-sm-4">
                         <input id="input_search_date" type="text" class="form-control" id="inputGroupSuccess2" aria-describedby="inputGroupSuccess2Status" placeholder='2015-08'>
                         <span value="<?= $this->Url->build(['_name' => 'report_monthly', 'wallet_id' => $wallet_id]) ?>" id="btn_search_month" class="input-group-addon btn btn-primary" >Search</span>             
                     </div> 
@@ -60,45 +60,52 @@
                     <tbody>
                         <?php $i = 1;
                         foreach ($transactions as $transaction): ?>
-                            <tr>
-                                <td><?= $i++ ?></td>
-                                <td>   <?= $this->HTML->image($transaction->category->avatar, array('class' => 'circle icon-category')); ?> &nbsp; <?= h($transaction->category->name); ?></td>
-                                <td><?= $transaction->category->mst_catalog->name ?></td>
-                                <td><?= $this->Number->format($transaction->total) ?></td>
-                            </tr>
+                        <tr>
+                            <td><?= $i++ ?></td>
+                            <td>   <?= $this->HTML->image($transaction->category->avatar, array('class' => 'circle icon-category')); ?> &nbsp; <?= h($transaction->category->name); ?></td>
+                            <td><?= $transaction->category->mst_catalog->name ?></td>
+                            <td><?= $this->Number->format($transaction->total) ?></td>
+                        </tr>
 <?php endforeach; ?>
                     </tbody>
                 </table>
                 <!-- PAGINATION-->
 <?php if ($this->Paginator->hasPage(2)): ?>
                 <div class="row">
-                        <nav class="pull-right" id="nav-pagination">
-
-                            <ul class="pagination"> 
+                    <nav class="pull-right" id="nav-pagination">
+<?=  $this->Paginator->options(array(
+                                    'url' => array(
+                                        '_name' => 'report_monthly_query',
+                                        'wallet_id' => $walletId,
+                                        'query_date' => $query
+                                    )
+                                ));
+                                ?>
+                        <ul class="pagination"> 
                                 <?= $this->Paginator->prev('« Previous') ?>
                                 <?= $this->Paginator->numbers() ?>
     <?= $this->Paginator->next('Next »') ?>
-                            </ul>
-                            <p><?=
+                        </ul>
+                        <p><?=
                                 $this->Paginator->counter([
                                     'format' => 'Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total'
                                 ])
                                 ?></p>
-                        </nav>
-                    </div>
+                    </nav>
+                </div>
 <?php endif; ?>
-<div class="row expense" id="expense">
-   <div class="col-sm-10"><h3>Expense Total</h3></div>
-   <div class="col-sm-2"><h3 class="text-danger"><?= $this->Number->format($total); ?></h3></div>
+                <div class="row expense" id="expense">
+                    <div class="col-sm-10"><h3>Expense Total</h3></div>
+                    <div class="col-sm-2"><h3 class="text-danger"><?= $this->Number->format($total); ?></h3></div>
   <?php foreach($expense as $ex): ?>
-    <div class="row expense">
-       <div class="col-sm-10"><h5><?= $this->HTML->image($ex->category->avatar, array('class' => 'circle icon-category')); ?> &nbsp; <?= $ex->category->name ?></h5>       
-         </div>
-        <div class="col-sm-2"><h5 class="text-danger"><?= $this->Number->format($ex->total) ?></h5></div>
-    </div>
+                    <div class="row expense">
+                        <div class="col-sm-10"><h5><?= $this->HTML->image($ex->category->avatar, array('class' => 'circle icon-category')); ?> &nbsp; <?= $ex->category->name ?></h5>       
+                        </div>
+                        <div class="col-sm-2"><h5 class="text-danger"><?= $this->Number->format($ex->total) ?></h5></div>
+                    </div>
   <?php endforeach; ?>
-   <div id="donutchart" style="height: 300px;"></div>
-</div>
+                    <div id="donutchart" style="height: 300px;"></div>
+                </div>
             </div> <!-- end ibox content --> 
         </div>
     </div>
@@ -118,7 +125,7 @@
 <?= $this->append('scriptBottom') ?>
 <script>
     $(function () {
-        var data = <?= $data?>; 
+        var data = <?= $data?>;
         donut(data);
     });
 </script>

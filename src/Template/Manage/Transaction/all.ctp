@@ -44,14 +44,17 @@
                         <i class="fa fa-cog fa-spin"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-
+                        <li><a href="<?= $this->Url->build(['_name'=>'transaction_all_change_view','type'=>1]) ?>">View by Transaction</a>
+                        </li>
+                        <li><a href="<?=   $this->Url->build(['_name'=>'transaction_all_change_view','type'=>2])  ?>">View by Category</a>
+                        </li>
                     </ul>
                     <a class="close-link btn-lg">
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
             </div> <!-- end ibox-title -->
-            <div id="ibox-content" class="ibox-content">            
+            <div id="ibox-content" class="ibox-content">  
                 <table id="main" class="table table-striped table-bordered table-hover dataTables-content" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>

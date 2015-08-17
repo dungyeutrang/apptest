@@ -26,7 +26,7 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5 id="title-balance"><b>Balance: <?= $this->Number->format($dataWallet->amount) ?></b>
+                <h5 id="title-balance"><b>Balance: <?= $this->Number->format($amount) ?></b>
                     <?= $this->Form->create(null) ?>
                     <select id="change-date">
                          <option value="<?= $this->Url->build(['_name' => 'all_transaction_query_date','query_date' => 'today']) ?>">To day</option>
@@ -44,14 +44,17 @@
                         <i class="fa fa-cog fa-spin"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                     
+                      <li><a href="<?= $this->Url->build(['_name'=>'transaction_all_change_view','type'=>1]) ?>">View by Transaction</a>
+                        </li>
+                        <li><a href="<?=   $this->Url->build(['_name'=>'transaction_all_change_view','type'=>2])  ?>">View by Category</a>
+                        </li>
                     </ul>
                     <a class="close-link btn-lg">
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
             </div> <!-- end ibox-title -->
-            <div id="ibox-content" class="ibox-content">            
+            <div id="ibox-content" class="ibox-content">
                 <table id="main" class="table table-striped table-bordered table-hover dataTables-content" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
@@ -93,16 +96,14 @@
 <?php if ($this->Paginator->hasPage(2)): ?>
                         <nav class="pull-right" id="nav-pagination">
                             <ul class="pagination">
-
                                 <?=
                                 $this->Paginator->options(array(
                                     'url' => array(
-                                        '_name' => 'transaction_query',
+                                        '_name' => 'all_transaction_query_date',
                                         'query_date' => $queryDate
                                     )
                                 ));
                                 ?>
-
     <?= $this->Paginator->prev('« Previous') ?>
                                 <?= $this->Paginator->numbers() ?>
                                 <?= $this->Paginator->next('Next »') ?>
@@ -121,7 +122,6 @@
 </div>
 <div  id="loading">
 </div>
-
 <!-- Modal Delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -140,7 +140,6 @@
         </div>
     </div>
 </div>
-
 <!-- modal change time -->
 <div id="myModal10" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="opacity: 1; display: block; transform: scaleX(1) scaleY(1);">
@@ -174,8 +173,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- Configuration --->
 <?= $this->element('Manage/configuration') ?>
 <!-- Data table JS -->
